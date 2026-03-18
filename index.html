@@ -8,8 +8,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap');
-        body { font-family: 'Kanit', sans-serif; background-color: #f0f4f8; }
+        @import url('https://fonts.googleapis.com/css2?family=K2D:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'K2D', sans-serif; background-color: #f0f4f8; }
         #qr-raw-container { display: none; }
         #display-canvas { 
             max-width: 100%; 
@@ -23,6 +23,16 @@
         .icon-option.active { border-color: #3b82f6; background-color: #eff6ff; transform: scale(1.05); }
         .loading-spin { animation: spin 1s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        /* แต่งปุ่มเลือกสีให้สวยงาม */
+        input[type="color"] {
+            -webkit-appearance: none;
+            border: none;
+            border-radius: 12px;
+            padding: 0;
+            overflow: hidden;
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: none; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
@@ -34,7 +44,6 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <!-- ส่วนควบคุม -->
             <div class="space-y-6">
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">ลิงก์ต้นทาง (URL)</label>
@@ -58,7 +67,18 @@
 
                 <div class="grid grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">ขนาดรูปภาพ (PX)</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">สีคิวอาร์โค้ด</label>
+                        <input type="color" id="qr-color" value="#000000" class="w-full h-14 cursor-pointer shadow-sm border-2 border-gray-100">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">สีพื้นหลัง</label>
+                        <input type="color" id="bg-color" value="#ffffff" class="w-full h-14 cursor-pointer shadow-sm border-2 border-gray-100">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">ขนาด (PX)</label>
                         <select id="qr-size" class="w-full px-4 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 outline-none cursor-pointer bg-white">
                             <option value="256">256 px</option>
                             <option value="512" selected>512 px</option>
@@ -67,7 +87,7 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">ความละเอียดลาย</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">ความละเอียด</label>
                         <select id="qr-ecc" class="w-full px-4 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 outline-none bg-white">
                             <option value="H" selected>สูงสุด (ใส่โลโก้)</option>
                             <option value="Q">ปานกลาง</option>
@@ -125,7 +145,6 @@
                 </button>
             </div>
 
-            <!-- ส่วนแสดงผล -->
             <div class="flex flex-col items-center justify-center bg-slate-50 rounded-[3rem] p-8 border-2 border-gray-200 min-h-[450px] relative text-center">
                 <div id="qr-raw-container"></div>
                 <canvas id="display-canvas" class="hidden"></canvas>
@@ -145,10 +164,10 @@
             </div>
         </div>
 
-        <!-- Footer -->
         <div class="mt-12 pt-8 border-t border-gray-100 text-center">
-            <p class="text-gray-500 font-medium tracking-wide">
-                พัฒนาโดย : <span class="text-blue-600 font-bold">ครูกัญ กัญญาทิพ เสนาะวงศ์</span>
+            <p class="text-gray-500 font-medium tracking-wide leading-relaxed">
+                พัฒนาโดย : <span class="text-blue-600 font-bold">ครูกัญ กัญญาทิพ เสนาะวงศ์</span><br>
+                <span class="text-sm">ศูนย์ส่งเสริมการเรียนรู้ระดับอำเภอพุทธมณฑล</span>
             </p>
             <p class="mt-4 text-sm text-gray-500 bg-gray-50 inline-block px-5 py-2.5 rounded-full border border-gray-200 shadow-sm">
                 <i class="fas fa-chart-line text-blue-500 mr-2"></i>จำนวนผู้เข้าใช้งาน: <span id="visitor-count" class="font-bold text-gray-700 text-base">กำลังโหลด...</span> ครั้ง
@@ -160,25 +179,17 @@
         let selectedIconType = 'none';
         let customIconBase64 = null;
 
-        // แก้ปัญหาภาพเบี้ยว 100%: ใช้รูปแบบ SVG ที่บังคับขนาดโครงสร้างพื้นฐาน 512x512 (เหมือนกับของ Google และ FB)
         const officialLogos = {
-            website: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiMzQjgyRjYiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjIwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjMyIi8+PGVsbGlwc2UgY3g9IjI1NiIgY3k9IjI1NiIgcng9IjgwIiByeT0iMjAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMzIiLz48cGF0aCBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMzIiIGQ9Ik01NiAyNTZoNDAwIE0xMjggMTUwaDI1NiBNMTI4IDM2MmgyNTYiLz48L3N2Zz4=',
-            
-            pdf: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiNlMzM2MjYiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMTAwIDE2MGg2MGMzMCAwIDUwIDE1IDUwIDQ1cy0yMCA0NS01MCA0NWgtMjB2NzBoLTQweiBtNDAgMzB2MzBoMTVjMTUgMCAxNS0zMCAwLTMweiBNMjQwIDE2MGg0MGMzMCAwIDUwIDE1IDUwIDUwdjIwYzAgMzUtMjAgNTAtNTAgNTBoLTQweiBtNDAgMzB2NjBoMTBjMTUgMCAyMC0xMCAyMC0yNXYtMTBjMC0xNS01LTI1LTIwLTI1eiBNMzcwIDE2MGg3MHYzMGgtMzB2MjBoMjV2MzBoLTI1djgwaC00MHoiLz48L3N2Zz4=',
-            
-            youtube: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NzYgNTEyIiB3aWR0aD0iNTc2IiBoZWlnaHQ9IjUxMiI+PHJlY3Qgd2lkdGg9IjU3NiIgaGVpZ2h0PSIzNjAiIHk9Ijc2IiByeD0iODAiIGZpbGw9IiNGRjAwMDAiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjEwIDE2MHYxOTJsMTQwLTk2eiIvPjwvc3ZnPg==',
-            
-            google: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCIgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiPjxyZWN0IHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgcng9IjEwIiBmaWxsPSIjZmZmZmZmIi8+PHBhdGggZmlsbD0iI0VBNDMzNSIgZD0iTTI0IDkuNWMzLjU0IDAgNi43MSAxLjIyIDkuMjEgMy42bDYuODUtNi44NUMzNS45IDIuMzggMzAuNDcgMCAyNCAwIDE0LjYyIDAgNi41MSA1LjM4IDIuNTYgMTMuMjlsNy45OCA2LjE5QzEyLjQzIDEzLjcyIDE3Ljc0IDkuNSAyNCA5LjV6Ii8+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTQ2Ljk4IDI0LjU1YzAtMS41Ny0uMTUtMy4wOS0uMzgtNC41NUgyNHY5LjAyaDEyLjk0Yy0uNTggMi45Ni0yLjI2IDUuNDgtNC43OCA3LjE4bDcuNzMgNmM0LjUxLTQuMTggNy4wOS0xMC4zNiA3LjA5LTE3LjY1eiIvPjxwYXRoIGZpbGw9IiNGQkJDMDUiIGQ9Ik0xMC41MyAyOC41OWMtLjQ4LTEuNDUtLjc2LTIuOTktLjc2LTQuNTlzLjI3LTMuMTQuNzYtNC41OWwtNy45OC02LjE5Qy45MiAxNi40NiAwIDIwLjEyIDAgMjRzLjkyIDcuNTQgMi41NiAxMC43OGw3Ljk3LTYuMTl6Ii8+PHBhdGggZmlsbD0iIzM0QThVMyIgZD0iTTI0IDQ4YzYuNDggMCAxMS45My0yLjEzIDE1Ljg5LTUuODFsLTcuNzMtNmMtMi4xNSAxLjQ1LTQuOTIgMi4zLTguMTYgMi4zLTYuMjYgMC0xMS41Ny00LjIyLTEzLjQ3LTkuOTFsLTcuOTggNi4xOUM2LjUxIDQyLjYyIDE0LjYyIDQ4IDI0IDQ4eiIvPjwvc3ZnPg==',
-            
-            facebook: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiMxODc3RjIiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzMyIDI1NmgtNDV2MTgzaC03NlYyNTZoLTMydi02NGgzMnYtNDNjMC01OSAzNi05MiA5MC05MiAyMyAwIDQ3IDQgNDcgNHY2MGgtMzFjLTI5IDAtMzQgMTQtMzQgMzN2NDJoNjRsLTExIDY0eiIvPjwvc3ZnPg==',
-            
-            line: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiMwMEMzMDAiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzgwIDIzMGMwLTY1LTUwLTExNi0xMjQtMTE2UzEyMiAxNjUgMTIyIDIzMGMwIDU4IDQwIDEwNiAxMDQgMTE0bC03IDMwYy0xIDMgMiA2IDYgNGw1OC0yNmM3IDEgMTUgMiAyMSAyIDc0IDAgMTI0LTUxIDEyNC0xMTR6Ii8+PC9zdmc+',
-            
-            audio: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiM5MzMzRUEiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzUyIDExMkgxOTJ2MjI0YzAgMzUtMjkgNjQtNjQgNjRzLTY0LTI5LTY0LTY0IDI5LTY0IDY0LTY0YzExIDAgMjEgMyAyOSA4Vjk2aDIyN3YxNDRjMCAzNS0yOSA2NC02NCA2NHMtNjQtMjktNjQtNjQgMjktNjQgNjQtNjRjMTEgMCAyMSAzIDI5IDhWMTEyeiIvPjwvc3ZnPg=='
+            website: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiMzQjgyRjYiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjE4MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMwIi8+PGVsbGlwc2UgY3g9IjI1NiIgY3k9IjI1NiIgcng9IjgwIiByeT0iMTgwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMzAiLz48cGF0aCBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMzAiIGQ9Ik03NiAyNTZoMzYwIE0xMjggMTUwaDI1NiBNMTI4IDM2MmgyNTYiLz48L3N2Zz4=',
+            pdf: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMDAiIGZpbGw9IiNlMzM2MjYiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMTAwIDE2MGg2MGMzMCAwIDUwIDE1IDUwIDQ1cy0yMCA0NS01MCA0NWgtMjB2NzBoLTQweiBtNDAgMzB2MzBoMTVjMTUgMCAxNS0zMCAwLTMweiBNMjQwIDE2MGg0MGMzMCAwIDUwIDE1IDUwIDUwdjIwYzAgMzUtMjAgNTAtNTAgNTBoLTQweiBtNDAgMzB2NjBoMTBjMTUgMCAyMC0xMCAyMC0yNXYtMTBjMC0xNS01LTI1LTIwLTI1eiBNMzcwIDE2MGg3MHYzMGgtMzB2MjBoMjV2MzBoLTI1djgwaC00MHoiLz48L3N2Zz4=',
+            youtube: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTc2IDUxMiI+PHJlY3Qgd2lkdGg9IjU3NiIgaGVpZ2h0PSIzNjAiIHk9Ijc2IiByeD0iOTAiIGZpbGw9IiNGRjAwMDAiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjMwIDE4MHYxNTJsMTQwLTc2eiIvPjwvc3ZnPg==',
+            google: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNDggNDgiPjxyZWN0IHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgcng9IjEwIiBmaWxsPSIjZmZmZmZmIi8+PHBhdGggZmlsbD0iI0VBNDMzNSIgZD0iTTI0IDkuNWMzLjU0IDAgNi43MSAxLjIyIDkuMjEgMy42bDYuODUtNi44NUMzNS45IDIuMzggMzAuNDcgMCAyNCAwIDE0LjYyIDAgNi41MSA1LjM4IDIuNTYgMTMuMjlsNy45OCA2LjE5QzEyLjQzIDEzLjcyIDE3Ljc0IDkuNSAyNCA5LjV6Ii8+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTQ2Ljk4IDI0LjU1YzAtMS41Ny0uMTUtMy4wOS0uMzgtNC41NUgyNHY5LjAyaDEyLjk0Yy0uNTggMi45Ni0yLjI2IDUuNDgtNC43OCA3LjE4bDcuNzMgNmM0LjUxLTQuMTggNy4wOS0xMC4zNiA3LjA5LTE3LjY1eiIvPjxwYXRoIGZpbGw9IiNGQkJDMDUiIGQ9Ik0xMC41MyAyOC41OWMtLjQ4LTEuNDUtLjc2LTIuOTktLjc2LTQuNTlzLjI3LTMuMTQuNzYtNC41OWwtNy45OC02LjE5Qy45MiAxNi40NiAwIDIwLjEyIDAgMjRzLjkyIDcuNTQgMi41NiAxMC43OGw3Ljk3LTYuMTl6Ii8+PHBhdGggZmlsbD0iIzM0QThVMyIgZD0iTTI0IDQ4YzYuNDggMCAxMS45My0yLjEzIDE1Ljg5LTUuODFsLTcuNzMtNmMtMi4xNSAxLjQ1LTQuOTIgMi4zLTguMTYgMi4zLTYuMjYgMC0xMS41Ny00LjIyLTEzLjQ3LTkuOTFsLTcuOTggNi4xOUM2LjUxIDQyLjYyIDE0LjYyIDQ4IDI0IDQ4eiIvPjwvc3ZnPg==',
+            facebook: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiMxODc3RjIiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzMyIDI1NmgtNDV2MTgzaC03NlYyNTZoLTMydi02NGgzMnYtNDNjMC01OSAzNi05MiA5MC05MiAyMyAwIDQ3IDQgNDcgNHY2MGgtMzFjLTI5IDAtMzQgMTQtMzQgMzN2NDJoNjRsLTExIDY0eiIvPjwvc3ZnPg==',
+            line: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiMwMEMzMDAiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzgwIDIzMGMwLTY1LTUwLTExNi0xMjQtMTE2UzEyMiAxNjUgMTIyIDIzMGMwIDU4IDQwIDEwNiAxMDQgMTE0bC03IDMwYy0xIDMgMiA2IDYgNGw1OC0yNmM3IDEgMTUgMiAyMSAyIDc0IDAgMTI0LTUxIDEyNC0xMTR6Ii8+PC9zdmc+',
+            audio: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiM5MzMzRUEiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjU2IDExMmMtNzAuNyAwLTEyOCA1Ny4zLTEyOCAxMjh2MTEyYzAgMjYuNSAyMS41IDQ4IDQ4IDQ4aDMyYzE3LjcgMCAzMi0xNC4zIDMyLTMyVjI1NmMwLTE3LjctMTQuMy0zMi0zMi0zMmgtMzJ2LTE2YzAtNDQuMiAzNS44LTgwIDgwLTgwczgwIDM1LjggODAgODB2MTZoLTMyYy0xNy43IDAtMzIgMTQuMy0zMiAzMnYxMTJjMCAxNy43IDE0LjMgMzIgMzIgMzJoMzJjMjYuNSAwIDQ4LTIxLjUgNDgtNDhWMjQwYzAtNzAuNy01Ny4zLTEyOC0xMjgtMTI4eiIvPjwvc3ZnPg=='
         };
 
         document.addEventListener('DOMContentLoaded', function() {
-            // ระบบนับยอดผู้เข้าชม
             fetch('https://api.counterapi.dev/v1/krukan_qr_app_v1/visits/up')
                 .then(response => response.json())
                 .then(data => {
@@ -226,7 +237,6 @@
             let url = document.getElementById('qr-text').value.trim();
             if (!url) return alert("กรุณาใส่ลิงก์ก่อนครับ");
 
-            // เพิ่ม https:// อัตโนมัติถ้าผู้ใช้ไม่ได้ใส่ เพื่อป้องกัน API ย่อลิงก์ Error
             if (!/^https?:\/\//i.test(url)) {
                 url = 'https://' + url;
                 document.getElementById('qr-text').value = url;
@@ -239,7 +249,6 @@
             
             let shortUrl = null;
 
-            // ฟังก์ชันที่ 1: สำหรับ is.gd ด้วยเทคนิค JSONP (ทะลุ CORS)
             const tryIsGd = () => new Promise((resolve, reject) => {
                 const callbackName = 'isgdCallback_' + Math.round(100000 * Math.random());
                 window[callbackName] = function(data) {
@@ -256,7 +265,6 @@
                 document.body.appendChild(script);
             });
 
-            // ฟังก์ชันที่ 2: สำหรับ TinyURL ผ่านตัวกลาง Proxy (แก้ปัญหาเบราว์เซอร์บล็อก)
             const tryTinyUrl = async () => {
                 const apiUrl = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`;
                 const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
@@ -269,16 +277,11 @@
             };
 
             try {
-                // แผนที่ 1: ลอง is.gd ผ่าน JSONP
                 shortUrl = await tryIsGd();
             } catch (e1) {
-                console.log("is.gd ถูกบล็อก ข้ามไปใช้ TinyURL...", e1);
                 try {
-                    // แผนที่ 2: ลอง TinyURL ผ่าน Proxy
                     shortUrl = await tryTinyUrl();
-                } catch (e2) {
-                    console.log("TinyURL ถูกบล็อกเช่นกัน", e2);
-                }
+                } catch (e2) {}
             }
 
             btn.disabled = false;
@@ -288,11 +291,9 @@
                 document.getElementById('short-url-result').value = shortUrl;
                 document.getElementById('short-link-container').classList.remove('hidden');
                 document.getElementById('qr-text').value = shortUrl; 
-                
-                // สั่งให้ระบบสร้าง QR Code อัตโนมัติหลังจากย่อลิงก์สำเร็จ
                 generateQRCode();
             } else {
-                alert("เกิดข้อผิดพลาด: ไม่สามารถย่อลิงก์ได้\n\nสาเหตุที่เป็นไปได้:\n1. ลิงก์ต้นทางอาจผิดรูปแบบ\n2. เครือข่ายอินเทอร์เน็ตของโรงเรียน/องค์กรอาจบล็อกเว็บย่อลิงก์ครับ");
+                alert("เกิดข้อผิดพลาด: ไม่สามารถย่อลิงก์ได้");
             }
         }
 
@@ -309,6 +310,8 @@
             const text = document.getElementById('qr-text').value.trim();
             const size = parseInt(document.getElementById('qr-size').value);
             const ecc = document.getElementById('qr-ecc').value;
+            const qrColor = document.getElementById('qr-color').value;
+            const bgColor = document.getElementById('bg-color').value;
             const container = document.getElementById('qr-raw-container');
             const canvas = document.getElementById('display-canvas');
             const actionArea = document.getElementById('action-area');
@@ -323,8 +326,8 @@
                     text: text,
                     width: 1024,
                     height: 1024,
-                    colorDark: "#000000",
-                    colorLight: "#ffffff",
+                    colorDark: qrColor,
+                    colorLight: bgColor,
                     correctLevel: QRCode.CorrectLevel[ecc]
                 });
             } catch (err) {
@@ -334,13 +337,13 @@
                         text: text,
                         width: 1024,
                         height: 1024,
-                        colorDark: "#000000",
-                        colorLight: "#ffffff",
+                        colorDark: qrColor,
+                        colorLight: bgColor,
                         correctLevel: QRCode.CorrectLevel.L
                     });
-                    alert("⚠️ ลิงก์ยาวเกินไปสำหรับความคมชัดระดับ 'สูงสุด' ระบบได้ปรับลดความละเอียดลงอัตโนมัติ\n\n💡 แนะนำให้กดปุ่ม 'ย่อลิงก์' ด้านบนก่อนกดสร้าง เพื่อให้ได้ภาพที่สแกนง่ายที่สุดครับ");
+                    alert("⚠️ ลิงก์ยาวเกินไป ระบบปรับลดความละเอียดลงอัตโนมัติ แนะนำให้ 'ย่อลิงก์' ก่อนกดสร้างครับ");
                 } catch (finalErr) {
-                    alert("❌ ลิงก์ของคุณยาวเกินขีดจำกัดของโปรแกรม กรุณากดปุ่ม 'ย่อลิงก์' เพื่อให้สั้นลงก่อนกดสร้างครับ");
+                    alert("❌ ลิงก์ของคุณยาวเกินขีดจำกัด กรุณากดปุ่ม 'ย่อลิงก์' ก่อนสร้างครับ");
                     return;
                 }
             }
@@ -359,6 +362,7 @@
         async function renderFinal(source, outputSize) {
             const canvas = document.getElementById('display-canvas');
             const ctx = canvas.getContext('2d');
+            const bgColor = document.getElementById('bg-color').value;
             
             canvas.width = outputSize;
             canvas.height = outputSize;
@@ -380,7 +384,7 @@
                 const y = (outputSize - logoSizeValue) / 2;
                 const pad = outputSize * 0.04;
                 
-                ctx.fillStyle = "white";
+                ctx.fillStyle = bgColor; // ใช้สีพื้นหลังที่เลือกเป็นขอบของโลโก้
                 ctx.beginPath();
                 const r = outputSize * 0.05;
                 if (ctx.roundRect) {
