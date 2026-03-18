@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator - ครูกัญ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap');
+        body { font-family: 'Kanit', sans-serif; background-color: #f0f4f8; }
+        #qr-raw-container { display: none; }
+        #display-canvas { 
+            max-width: 100%; 
+            height: auto; 
+            border-radius: 24px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            background: white;
+            margin: 0 auto;
+        }
+        .icon-option { cursor: pointer; border-width: 2px; border-color: transparent; transition: all 0.2s; }
+        .icon-option.active { border-color: #3b82f6; background-color: #eff6ff; transform: scale(1.05); }
+        .loading-spin { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl max-w-5xl w-full border border-gray-100">
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-extrabold text-blue-600 mb-2">QR Code & Short Link</h1>
+            <p class="text-gray-500 text-lg">สร้าง QR Code สวยงาม พร้อมไอคอนทางการ</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- ส่วนควบคุม -->
+            <div class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">ลิงก์ต้นทาง (URL)</label>
+                    <div class="flex gap-2">
+                        <input type="text" id="qr-text" placeholder="https://www.example.com" 
+                            class="flex-1 px-5 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all text-gray-700">
+                        <button onclick="shortenLink()" id="shorten-btn" class="bg-indigo-500 hover:bg-indigo-600 text-white px-5 rounded-2xl font-bold shadow-md transition-all whitespace-nowrap">
+                            <span id="shorten-text">ย่อลิงก์</span>
+                        </button>
+                    </div>
+                    <div id="short-link-container" class="mt-3 hidden">
+                        <div class="flex items-center gap-2 p-3 bg-indigo-50 rounded-xl border border-indigo-100">
+                            <i class="fas fa-link text-indigo-500"></i>
+                            <input type="text" id="short-url-result" readonly class="bg-transparent border-none outline-none text-sm text-indigo-700 font-medium w-full">
+                            <button onclick="copyLink()" class="text-indigo-600 hover:text-indigo-800 p-1">
+                                <i class="fas fa-copy" id="copy-icon"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">ขนาดรูปภาพ (PX)</label>
+                        <select id="qr-size" class="w-full px-4 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 outline-none cursor-pointer bg-white">
+                            <option value="256">256 px</option>
+                            <option value="512" selected>512 px</option>
+                            <option value="1024">1024 px (HD)</option>
+                            <option value="2048">2048 px (คมชัดสูง)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">ความละเอียดลาย</label>
+                        <select id="qr-ecc" class="w-full px-4 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 outline-none bg-white">
+                            <option value="H" selected>สูงสุด (ใส่โลโก้)</option>
+                            <option value="Q">ปานกลาง</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-3 uppercase">เลือกไอคอนตรงกลาง</label>
+                    <div class="grid grid-cols-4 gap-3" id="icon-selector">
+                        <button onclick="selectIcon('none')" class="icon-option active flex flex-col items-center p-3 rounded-2xl bg-gray-50 border-2 border-gray-100" data-icon="none">
+                            <i class="fas fa-times text-gray-400 text-2xl"></i>
+                            <span class="text-[10px] mt-1 font-medium">ไม่มี</span>
+                        </button>
+                        <button onclick="selectIcon('pdf')" class="icon-option flex flex-col items-center p-3 rounded-2xl bg-gray-50 border-2 border-gray-100" data-icon="pdf">
+                            <i class="fas fa-file-pdf text-red-600 text-2xl"></i>
+                            <span class="text-[10px] mt-1 font-medium">PDF</span>
+                        </button>
+                        <button onclick="selectIcon('youtube')" class="icon-option flex flex-col items-center p-3 rounded-2xl bg-gray-50 border-2 border-gray-100" data-icon="youtube">
+                            <i class="fab fa-youtube text-red-600 text-2xl"></i>
+                            <span class="text-[10px] mt-1 font-medium">Youtube</span>
+                        </button>
+                        <button onclick="selectIcon('google')" class="icon-option flex flex-col items-center p-3 rounded-2xl bg-gray-50 border-2 border-gray-100" data-icon="google">
+                            <i class="fab fa-google text-blue-500 text-2xl"></i>
+                            <span class="text-[10px] mt-1 font-medium">Gmail</span>
+                        </button>
+                        <button onclick="selectIcon('facebook')" class="icon-option flex flex-col items-center p-3 rounded-2xl bg-gray-50 border-2 border-gray-100" data-icon="facebook">
+                            <i class="fab fa-facebook text-blue-700 text-2xl"></i>
+                            <span class="text-[10px] mt-1 font-medium">FB</span>
+                        </button>
+                        <button onclick="selectIcon('line')" class="icon-option flex flex-col items-center p-3 rounded-2xl bg-gray-50 border-2 border-gray-100" data-icon="line">
+                            <i class="fab fa-line text-green-500 text-2xl"></i>
+                            <span class="text-[10px] mt-1 font-medium">Line</span>
+                        </button>
+                        <button onclick="selectIcon('website')" class="icon-option flex flex-col items-center p-3 rounded-2xl bg-gray-50 border-2 border-gray-100" data-icon="website">
+                            <i class="fas fa-globe text-cyan-500 text-2xl"></i>
+                            <span class="text-[10px] mt-1 font-medium">Web</span>
+                        </button>
+                        <button onclick="selectIcon('audio')" class="icon-option flex flex-col items-center p-3 rounded-2xl bg-gray-50 border-2 border-gray-100" data-icon="audio">
+                            <i class="fas fa-headphones text-purple-600 text-2xl"></i>
+                            <span class="text-[10px] mt-1 font-medium">Audio</span>
+                        </button>
+                    </div>
+                    <div class="mt-3">
+                        <button onclick="document.getElementById('custom-icon').click()" class="w-full py-2 border-2 border-dashed border-gray-200 rounded-xl text-sm text-gray-500 hover:bg-gray-50 transition-all" id="custom-btn-ui">
+                            <i class="fas fa-upload mr-2"></i>อัปโหลดโลโก้เอง
+                        </button>
+                        <input type="file" id="custom-icon" accept="image/*" class="hidden">
+                    </div>
+                </div>
+
+                <button onclick="generateQRCode()" 
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-5 rounded-2xl shadow-xl transition-all transform hover:-translate-y-1 active:scale-95 text-xl">
+                    สร้าง QR CODE
+                </button>
+            </div>
+
+            <!-- ส่วนแสดงผล -->
+            <div class="flex flex-col items-center justify-center bg-slate-50 rounded-[3rem] p-8 border-2 border-gray-200 min-h-[450px] relative text-center">
+                <div id="qr-raw-container"></div>
+                <canvas id="display-canvas" class="hidden"></canvas>
+                
+                <div id="placeholder-ui">
+                    <div class="bg-white p-10 rounded-full shadow-inner mb-6 inline-block text-blue-50">
+                        <i class="fas fa-qrcode text-8xl"></i>
+                    </div>
+                    <p id="status-text" class="text-gray-400 font-medium text-lg">ภาพตัวอย่างจะปรากฏที่นี่</p>
+                </div>
+
+                <div id="action-area" class="hidden w-full mt-8">
+                    <button onclick="downloadQR()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-5 rounded-2xl font-bold shadow-xl transition-all flex items-center justify-center gap-3 text-lg">
+                        <i class="fas fa-file-download text-2xl"></i> ดาวน์โหลดรูปภาพ (PNG)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-12 pt-8 border-t border-gray-100 text-center">
+            <p class="text-gray-500 font-medium tracking-wide">
+                พัฒนาโดย : <span class="text-blue-600 font-bold">ครูกัญ กัญญาทิพ เสนาะวงศ์</span>
+            </p>
+            <p class="mt-4 text-sm text-gray-500 bg-gray-50 inline-block px-5 py-2.5 rounded-full border border-gray-200 shadow-sm">
+                <i class="fas fa-chart-line text-blue-500 mr-2"></i>จำนวนผู้เข้าใช้งาน: <span id="visitor-count" class="font-bold text-gray-700 text-base">กำลังโหลด...</span> ครั้ง
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let selectedIconType = 'none';
+        let customIconBase64 = null;
+
+        // แก้ปัญหาภาพเบี้ยว 100%: ใช้รูปแบบ SVG ที่บังคับขนาดโครงสร้างพื้นฐาน 512x512 (เหมือนกับของ Google และ FB)
+        const officialLogos = {
+            website: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiMzQjgyRjYiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjIwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjMyIi8+PGVsbGlwc2UgY3g9IjI1NiIgY3k9IjI1NiIgcng9IjgwIiByeT0iMjAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMzIiLz48cGF0aCBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMzIiIGQ9Ik01NiAyNTZoNDAwIE0xMjggMTUwaDI1NiBNMTI4IDM2MmgyNTYiLz48L3N2Zz4=',
+            
+            pdf: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiNlMzM2MjYiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMTAwIDE2MGg2MGMzMCAwIDUwIDE1IDUwIDQ1cy0yMCA0NS01MCA0NWgtMjB2NzBoLTQweiBtNDAgMzB2MzBoMTVjMTUgMCAxNS0zMCAwLTMweiBNMjQwIDE2MGg0MGMzMCAwIDUwIDE1IDUwIDUwdjIwYzAgMzUtMjAgNTAtNTAgNTBoLTQweiBtNDAgMzB2NjBoMTBjMTUgMCAyMC0xMCAyMC0yNXYtMTBjMC0xNS01LTI1LTIwLTI1eiBNMzcwIDE2MGg3MHYzMGgtMzB2MjBoMjV2MzBoLTI1djgwaC00MHoiLz48L3N2Zz4=',
+            
+            youtube: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NzYgNTEyIiB3aWR0aD0iNTc2IiBoZWlnaHQ9IjUxMiI+PHJlY3Qgd2lkdGg9IjU3NiIgaGVpZ2h0PSIzNjAiIHk9Ijc2IiByeD0iODAiIGZpbGw9IiNGRjAwMDAiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjEwIDE2MHYxOTJsMTQwLTk2eiIvPjwvc3ZnPg==',
+            
+            google: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0OCA0OCIgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiPjxyZWN0IHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgcng9IjEwIiBmaWxsPSIjZmZmZmZmIi8+PHBhdGggZmlsbD0iI0VBNDMzNSIgZD0iTTI0IDkuNWMzLjU0IDAgNi43MSAxLjIyIDkuMjEgMy42bDYuODUtNi44NUMzNS45IDIuMzggMzAuNDcgMCAyNCAwIDE0LjYyIDAgNi41MSA1LjM4IDIuNTYgMTMuMjlsNy45OCA2LjE5QzEyLjQzIDEzLjcyIDE3Ljc0IDkuNSAyNCA5LjV6Ii8+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTQ2Ljk4IDI0LjU1YzAtMS41Ny0uMTUtMy4wOS0uMzgtNC41NUgyNHY5LjAyaDEyLjk0Yy0uNTggMi45Ni0yLjI2IDUuNDgtNC43OCA3LjE4bDcuNzMgNmM0LjUxLTQuMTggNy4wOS0xMC4zNiA3LjA5LTE3LjY1eiIvPjxwYXRoIGZpbGw9IiNGQkJDMDUiIGQ9Ik0xMC41MyAyOC41OWMtLjQ4LTEuNDUtLjc2LTIuOTktLjc2LTQuNTlzLjI3LTMuMTQuNzYtNC41OWwtNy45OC02LjE5Qy45MiAxNi40NiAwIDIwLjEyIDAgMjRzLjkyIDcuNTQgMi41NiAxMC43OGw3Ljk3LTYuMTl6Ii8+PHBhdGggZmlsbD0iIzM0QThVMyIgZD0iTTI0IDQ4YzYuNDggMCAxMS45My0yLjEzIDE1Ljg5LTUuODFsLTcuNzMtNmMtMi4xNSAxLjQ1LTQuOTIgMi4zLTguMTYgMi4zLTYuMjYgMC0xMS41Ny00LjIyLTEzLjQ3LTkuOTFsLTcuOTggNi4xOUM2LjUxIDQyLjYyIDE0LjYyIDQ4IDI0IDQ4eiIvPjwvc3ZnPg==',
+            
+            facebook: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiMxODc3RjIiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzMyIDI1NmgtNDV2MTgzaC03NlYyNTZoLTMydi02NGgzMnYtNDNjMC01OSAzNi05MiA5MC05MiAyMyAwIDQ3IDQgNDcgNHY2MGgtMzFjLTI5IDAtMzQgMTQtMzQgMzN2NDJoNjRsLTExIDY0eiIvPjwvc3ZnPg==',
+            
+            line: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiMwMEMzMDAiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzgwIDIzMGMwLTY1LTUwLTExNi0xMjQtMTE2UzEyMiAxNjUgMTIyIDIzMGMwIDU4IDQwIDEwNiAxMDQgMTE0bC03IDMwYy0xIDMgMiA2IDYgNGw1OC0yNmM3IDEgMTUgMiAyMSAyIDc0IDAgMTI0LTUxIDEyNC0xMTR6Ii8+PC9zdmc+',
+            
+            audio: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiM5MzMzRUEiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzUyIDExMkgxOTJ2MjI0YzAgMzUtMjkgNjQtNjQgNjRzLTY0LTI5LTY0LTY0IDI5LTY0IDY0LTY0YzExIDAgMjEgMyAyOSA4Vjk2aDIyN3YxNDRjMCAzNS0yOSA2NC02NCA2NHMtNjQtMjktNjQtNjQgMjktNjQgNjQtNjRjMTEgMCAyMSAzIDI5IDhWMTEyeiIvPjwvc3ZnPg=='
+        };
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // ระบบนับยอดผู้เข้าชม
+            fetch('https://api.counterapi.dev/v1/krukan_qr_app_v1/visits/up')
+                .then(response => response.json())
+                .then(data => {
+                    const countEl = document.getElementById('visitor-count');
+                    if (countEl && data.count) {
+                        countEl.innerText = data.count.toLocaleString();
+                    }
+                })
+                .catch(err => {
+                    const countEl = document.getElementById('visitor-count');
+                    if (countEl) countEl.innerText = "ไม่สามารถโหลดได้";
+                });
+
+            const customInput = document.getElementById('custom-icon');
+            if(customInput) {
+                customInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            customIconBase64 = event.target.result;
+                            selectedIconType = 'custom';
+                            document.querySelectorAll('.icon-option').forEach(btn => btn.classList.remove('active'));
+                            const customBtnUi = document.getElementById('custom-btn-ui');
+                            if(customBtnUi) customBtnUi.classList.add('active');
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        });
+
+        function selectIcon(type) {
+            selectedIconType = type;
+            document.querySelectorAll('.icon-option').forEach(btn => btn.classList.remove('active'));
+            if(type !== 'none' && type !== 'custom') {
+                const btn = document.querySelector(`[data-icon="${type}"]`);
+                if(btn) btn.classList.add('active');
+            } else if(type === 'none') {
+                document.querySelector('[data-icon="none"]').classList.add('active');
+            }
+        }
+
+        async function shortenLink() {
+            let url = document.getElementById('qr-text').value.trim();
+            if (!url) return alert("กรุณาใส่ลิงก์ก่อนครับ");
+
+            // เพิ่ม https:// อัตโนมัติถ้าผู้ใช้ไม่ได้ใส่ เพื่อป้องกัน API ย่อลิงก์ Error
+            if (!/^https?:\/\//i.test(url)) {
+                url = 'https://' + url;
+                document.getElementById('qr-text').value = url;
+            }
+
+            const btn = document.getElementById('shorten-btn');
+            const textSpan = document.getElementById('shorten-text');
+            btn.disabled = true;
+            textSpan.innerHTML = '<i class="fas fa-spinner loading-spin"></i>';
+            
+            let shortUrl = null;
+
+            // ฟังก์ชันที่ 1: สำหรับ is.gd ด้วยเทคนิค JSONP (ทะลุ CORS)
+            const tryIsGd = () => new Promise((resolve, reject) => {
+                const callbackName = 'isgdCallback_' + Math.round(100000 * Math.random());
+                window[callbackName] = function(data) {
+                    delete window[callbackName];
+                    if (data.shorturl) resolve(data.shorturl);
+                    else reject(data.errormessage);
+                };
+                const script = document.createElement('script');
+                script.src = `https://is.gd/create.php?format=json&url=${encodeURIComponent(url)}&callback=${callbackName}`;
+                script.onerror = () => {
+                    delete window[callbackName];
+                    reject("is.gd script error");
+                };
+                document.body.appendChild(script);
+            });
+
+            // ฟังก์ชันที่ 2: สำหรับ TinyURL ผ่านตัวกลาง Proxy (แก้ปัญหาเบราว์เซอร์บล็อก)
+            const tryTinyUrl = async () => {
+                const apiUrl = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`;
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`;
+                const response = await fetch(proxyUrl);
+                const data = await response.json();
+                if (data.contents && data.contents.startsWith('http')) {
+                    return data.contents;
+                }
+                throw new Error("Invalid response from proxy");
+            };
+
+            try {
+                // แผนที่ 1: ลอง is.gd ผ่าน JSONP
+                shortUrl = await tryIsGd();
+            } catch (e1) {
+                console.log("is.gd ถูกบล็อก ข้ามไปใช้ TinyURL...", e1);
+                try {
+                    // แผนที่ 2: ลอง TinyURL ผ่าน Proxy
+                    shortUrl = await tryTinyUrl();
+                } catch (e2) {
+                    console.log("TinyURL ถูกบล็อกเช่นกัน", e2);
+                }
+            }
+
+            btn.disabled = false;
+            textSpan.innerText = "ย่อลิงก์";
+
+            if (shortUrl) {
+                document.getElementById('short-url-result').value = shortUrl;
+                document.getElementById('short-link-container').classList.remove('hidden');
+                document.getElementById('qr-text').value = shortUrl; 
+                
+                // สั่งให้ระบบสร้าง QR Code อัตโนมัติหลังจากย่อลิงก์สำเร็จ
+                generateQRCode();
+            } else {
+                alert("เกิดข้อผิดพลาด: ไม่สามารถย่อลิงก์ได้\n\nสาเหตุที่เป็นไปได้:\n1. ลิงก์ต้นทางอาจผิดรูปแบบ\n2. เครือข่ายอินเทอร์เน็ตของโรงเรียน/องค์กรอาจบล็อกเว็บย่อลิงก์ครับ");
+            }
+        }
+
+        function copyLink() {
+            const input = document.getElementById('short-url-result');
+            input.select();
+            document.execCommand('copy');
+            const icon = document.getElementById('copy-icon');
+            icon.className = "fas fa-check text-green-500";
+            setTimeout(() => icon.className = "fas fa-copy", 2000);
+        }
+
+        function generateQRCode() {
+            const text = document.getElementById('qr-text').value.trim();
+            const size = parseInt(document.getElementById('qr-size').value);
+            const ecc = document.getElementById('qr-ecc').value;
+            const container = document.getElementById('qr-raw-container');
+            const canvas = document.getElementById('display-canvas');
+            const actionArea = document.getElementById('action-area');
+            const placeholder = document.getElementById('placeholder-ui');
+
+            if (!text) return alert("กรุณากรอกลิงก์ก่อนครับ");
+
+            container.innerHTML = "";
+            
+            try {
+                new QRCode(container, {
+                    text: text,
+                    width: 1024,
+                    height: 1024,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel[ecc]
+                });
+            } catch (err) {
+                try {
+                    container.innerHTML = "";
+                    new QRCode(container, {
+                        text: text,
+                        width: 1024,
+                        height: 1024,
+                        colorDark: "#000000",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.L
+                    });
+                    alert("⚠️ ลิงก์ยาวเกินไปสำหรับความคมชัดระดับ 'สูงสุด' ระบบได้ปรับลดความละเอียดลงอัตโนมัติ\n\n💡 แนะนำให้กดปุ่ม 'ย่อลิงก์' ด้านบนก่อนกดสร้าง เพื่อให้ได้ภาพที่สแกนง่ายที่สุดครับ");
+                } catch (finalErr) {
+                    alert("❌ ลิงก์ของคุณยาวเกินขีดจำกัดของโปรแกรม กรุณากดปุ่ม 'ย่อลิงก์' เพื่อให้สั้นลงก่อนกดสร้างครับ");
+                    return;
+                }
+            }
+
+            setTimeout(async () => {
+                const rawCanvas = container.querySelector('canvas');
+                if (rawCanvas) {
+                    await renderFinal(rawCanvas, size);
+                    placeholder.classList.add('hidden');
+                    canvas.classList.remove('hidden');
+                    actionArea.classList.remove('hidden');
+                }
+            }, 600);
+        }
+
+        async function renderFinal(source, outputSize) {
+            const canvas = document.getElementById('display-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = outputSize;
+            canvas.height = outputSize;
+
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(source, 0, 0, outputSize, outputSize);
+
+            let logoSrc = (selectedIconType === 'custom') ? customIconBase64 : officialLogos[selectedIconType];
+
+            if (logoSrc) {
+                const img = new Image();
+                img.src = logoSrc;
+                await img.decode();
+
+                const logoScale = 0.22;
+                const logoSizeValue = outputSize * logoScale;
+                const x = (outputSize - logoSizeValue) / 2;
+                const y = (outputSize - logoSizeValue) / 2;
+                const pad = outputSize * 0.04;
+                
+                ctx.fillStyle = "white";
+                ctx.beginPath();
+                const r = outputSize * 0.05;
+                if (ctx.roundRect) {
+                    ctx.roundRect(x - pad, y - pad, logoSizeValue + pad * 2, logoSizeValue + pad * 2, r);
+                } else {
+                    ctx.rect(x - pad, y - pad, logoSizeValue + pad * 2, logoSizeValue + pad * 2);
+                }
+                ctx.fill();
+                ctx.drawImage(img, x, y, logoSizeValue, logoSizeValue);
+            }
+        }
+
+        function downloadQR() {
+            const canvas = document.getElementById('display-canvas');
+            const link = document.createElement('a');
+            link.download = `QR_KruKan_${Date.now()}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        }
+
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+                if (w < 2 * r) r = w / 2;
+                if (h < 2 * r) r = h / 2;
+                this.beginPath();
+                this.moveTo(x + r, y);
+                this.arcTo(x + w, y, x + w, y + h, r);
+                this.arcTo(x + w, y + h, x, y + h, r);
+                this.arcTo(x, y + h, x, y, r);
+                this.arcTo(x, y, x + w, y, r);
+                this.closePath();
+                return this;
+            }
+        }
+    </script>
+</body>
+</html>
