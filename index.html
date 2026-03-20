@@ -65,6 +65,13 @@
                     </div>
                 </div>
 
+                <!-- เพิ่มช่องใส่ชื่อเรื่องใต้ QR Code -->
+                <div>
+                    <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">ข้อความใต้ QR Code (ไม่ใส่ก็ได้)</label>
+                    <input type="text" id="qr-title" placeholder="เช่น สื่อการสอน ม.1, ดาวน์โหลดเอกสาร" 
+                        class="w-full px-5 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all text-gray-700">
+                </div>
+
                 <div class="grid grid-cols-2 gap-6">
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">สีคิวอาร์โค้ด</label>
@@ -373,12 +380,23 @@
             const canvas = document.getElementById('display-canvas');
             const ctx = canvas.getContext('2d');
             const bgColor = document.getElementById('bg-color').value;
+            const qrColor = document.getElementById('qr-color').value;
+            const textTitle = document.getElementById('qr-title').value.trim();
+            
+            // คำนวณพื้นที่ด้านล่างสำหรับใส่ข้อความ
+            const textPadding = textTitle ? (outputSize * 0.15) : 0;
             
             canvas.width = outputSize;
-            canvas.height = outputSize;
+            canvas.height = outputSize + textPadding;
 
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
+            
+            // วาดพื้นหลังให้ครอบคลุมพื้นที่ทั้งหมด (รวมถึงส่วนข้อความ)
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // วาด QR Code
             ctx.drawImage(source, 0, 0, outputSize, outputSize);
 
             let logoSrc = (selectedIconType === 'custom') ? customIconBase64 : officialLogos[selectedIconType];
@@ -404,6 +422,28 @@
                 }
                 ctx.fill();
                 ctx.drawImage(img, x, y, logoSizeValue, logoSizeValue);
+            }
+
+            // วาดข้อความใต้ QR Code (ถ้ามีการพิมพ์ไว้)
+            if (textTitle) {
+                ctx.fillStyle = qrColor;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                
+                // ตั้งค่าฟอนต์
+                let fontSize = outputSize * 0.06;
+                ctx.font = `600 ${fontSize}px K2D, sans-serif`;
+                
+                // ลดขนาดฟอนต์อัตโนมัติ หากข้อความยาวเกินไป
+                const maxWidth = outputSize * 0.9;
+                let textWidth = ctx.measureText(textTitle).width;
+                if (textWidth > maxWidth) {
+                    fontSize = fontSize * (maxWidth / textWidth);
+                    ctx.font = `600 ${fontSize}px K2D, sans-serif`;
+                }
+                
+                // วาดตัวอักษรลงกึ่งกลางพื้นที่ด้านล่าง
+                ctx.fillText(textTitle, outputSize / 2, outputSize + (textPadding / 2));
             }
         }
 
