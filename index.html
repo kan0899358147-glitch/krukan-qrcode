@@ -181,8 +181,8 @@
                     <div class="bg-blue-50/80 border border-blue-100 text-blue-700 text-sm p-4 rounded-2xl text-left flex gap-3 shadow-sm">
                         <i class="fas fa-lightbulb text-xl shrink-0 text-blue-500"></i>
                         <p class="leading-relaxed">
-                            <strong class="block mb-1">ทริค: วิธีทำให้รูปสแกนได้+คลิกได้!</strong>
-                            ไฟล์รูปภาพ (.png) จะคลิกในตัวเองไม่ได้ หากนำไปทำแบนเนอร์หรือใส่ใน <b>Word, PowerPoint, PDF หรือ Canva</b> ให้คุณครูคลิกขวาที่รูปแล้วเลือกคำสั่ง <b>"แทรกลิงก์" (Link)</b> เพื่อแปะลิงก์ทับรูป เพียงเท่านี้รูปก็จะคลิกได้ครับ!
+                            <strong class="block mb-1">ทริค: วิธีทำให้ภาพ QR Code สแกนได้+คลิกได้!</strong>
+                            ไฟล์รูปภาพ (.png) จะคลิกในตัวเองไม่ได้ หากนำไปทำแบนเนอร์หรือใส่ใน <b>Word, PowerPoint, PDF หรือ Canva</b> ให้คลิกขวาที่ภาพ QR Code แล้วเลือกคำสั่ง <b>"แทรกลิงก์" (Link)</b> เพื่อฝังลิงก์ลงในภาพ เพียงเท่านี้ภาพก็จะคลิกได้!
                         </p>
                     </div>
                 </div>
@@ -273,7 +273,7 @@
 
         async function shortenLink() {
             let url = document.getElementById('qr-text').value.trim();
-            if (!url) return alert("กรุณาใส่ลิงก์ก่อนครับ");
+            if (!url) return alert("กรุณาใส่ลิงก์ก่อน");
 
             if (!/^https?:\/\//i.test(url)) {
                 url = 'https://' + url;
@@ -355,7 +355,7 @@
             const actionArea = document.getElementById('action-area');
             const placeholder = document.getElementById('placeholder-ui');
 
-            if (!text) return alert("กรุณากรอกลิงก์ก่อนครับ");
+            if (!text) return alert("กรุณากรอกลิงก์ก่อน");
 
             container.innerHTML = "";
             
@@ -379,9 +379,9 @@
                         colorLight: bgColor,
                         correctLevel: QRCode.CorrectLevel.L
                     });
-                    alert("⚠️ ลิงก์ยาวเกินไป ระบบปรับลดความละเอียดลงอัตโนมัติ แนะนำให้ 'ย่อลิงก์' ก่อนกดสร้างครับ");
+                    alert("⚠️ ลิงก์ยาวเกินไป ระบบปรับลดความละเอียดลงอัตโนมัติ แนะนำให้ 'ย่อลิงก์' ก่อนกดสร้าง");
                 } catch (finalErr) {
-                    alert("❌ ลิงก์ของคุณยาวเกินขีดจำกัด กรุณากดปุ่ม 'ย่อลิงก์' ก่อนสร้างครับ");
+                    alert("❌ ลิงก์ของคุณยาวเกินขีดจำกัด กรุณากดปุ่ม 'ย่อลิงก์' ก่อนสร้าง");
                     return;
                 }
             }
