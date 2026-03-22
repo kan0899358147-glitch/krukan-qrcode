@@ -160,9 +160,11 @@
                 </button>
             </div>
 
+            <!-- ส่วนแสดงผลเพิ่มการคลิกเพื่อทดสอบลิงก์ -->
             <div class="flex flex-col items-center justify-center bg-slate-50 rounded-[3rem] p-8 border-2 border-gray-200 min-h-[450px] relative text-center">
                 <div id="qr-raw-container"></div>
-                <canvas id="display-canvas" class="hidden"></canvas>
+                <!-- เปลี่ยน Canvas ให้เป็นปุ่มคลิกได้ -->
+                <canvas id="display-canvas" class="hidden cursor-pointer hover:scale-[1.02] transition-transform duration-300" title="คลิกเพื่อทดสอบเปิดลิงก์" onclick="testLink()"></canvas>
                 
                 <div id="placeholder-ui">
                     <div class="bg-white p-10 rounded-full shadow-inner mb-6 inline-block text-blue-50">
@@ -171,10 +173,18 @@
                     <p id="status-text" class="text-gray-400 font-medium text-lg">ภาพตัวอย่างจะปรากฏที่นี่</p>
                 </div>
 
-                <div id="action-area" class="hidden w-full mt-8">
+                <div id="action-area" class="hidden w-full mt-8 flex flex-col gap-4">
                     <button onclick="downloadQR()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-5 rounded-2xl font-bold shadow-xl transition-all flex items-center justify-center gap-3 text-lg">
                         <i class="fas fa-file-download text-2xl"></i> ดาวน์โหลดรูปภาพ (PNG)
                     </button>
+                    <!-- กล่องคำแนะนำการทำลิงก์ -->
+                    <div class="bg-blue-50/80 border border-blue-100 text-blue-700 text-sm p-4 rounded-2xl text-left flex gap-3 shadow-sm">
+                        <i class="fas fa-lightbulb text-xl shrink-0 text-blue-500"></i>
+                        <p class="leading-relaxed">
+                            <strong class="block mb-1">ทริค: วิธีทำให้รูปสแกนได้+คลิกได้!</strong>
+                            ไฟล์รูปภาพ (.png) จะคลิกในตัวเองไม่ได้ หากนำไปทำแบนเนอร์หรือใส่ใน <b>Word, PowerPoint, PDF หรือ Canva</b> ให้คุณครูคลิกขวาที่รูปแล้วเลือกคำสั่ง <b>"แทรกลิงก์" (Link)</b> เพื่อแปะลิงก์ทับรูป เพียงเท่านี้รูปก็จะคลิกได้ครับ!
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -247,6 +257,17 @@
                 if(btn) btn.classList.add('active');
             } else if(type === 'none') {
                 document.querySelector('[data-icon="none"]').classList.add('active');
+            }
+        }
+
+        function testLink() {
+            const url = document.getElementById('qr-text').value.trim();
+            if(url) {
+                if (!/^https?:\/\//i.test(url)) {
+                    window.open('https://' + url, '_blank');
+                } else {
+                    window.open(url, '_blank');
+                }
             }
         }
 
@@ -383,7 +404,6 @@
             const qrColor = document.getElementById('qr-color').value;
             const textTitle = document.getElementById('qr-title').value.trim();
             
-            // คำนวณพื้นที่ด้านล่างสำหรับใส่ข้อความ
             const textPadding = textTitle ? (outputSize * 0.15) : 0;
             
             canvas.width = outputSize;
@@ -392,11 +412,9 @@
             ctx.imageSmoothingEnabled = true;
             ctx.imageSmoothingQuality = 'high';
             
-            // วาดพื้นหลังให้ครอบคลุมพื้นที่ทั้งหมด (รวมถึงส่วนข้อความ)
             ctx.fillStyle = bgColor;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // วาด QR Code
             ctx.drawImage(source, 0, 0, outputSize, outputSize);
 
             let logoSrc = (selectedIconType === 'custom') ? customIconBase64 : officialLogos[selectedIconType];
@@ -412,7 +430,7 @@
                 const y = (outputSize - logoSizeValue) / 2;
                 const pad = outputSize * 0.04;
                 
-                ctx.fillStyle = bgColor; // ใช้สีพื้นหลังที่เลือกเป็นขอบของโลโก้
+                ctx.fillStyle = bgColor; 
                 ctx.beginPath();
                 const r = outputSize * 0.05;
                 if (ctx.roundRect) {
@@ -424,17 +442,14 @@
                 ctx.drawImage(img, x, y, logoSizeValue, logoSizeValue);
             }
 
-            // วาดข้อความใต้ QR Code (ถ้ามีการพิมพ์ไว้)
             if (textTitle) {
                 ctx.fillStyle = qrColor;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 
-                // ตั้งค่าฟอนต์
                 let fontSize = outputSize * 0.06;
                 ctx.font = `600 ${fontSize}px K2D, sans-serif`;
                 
-                // ลดขนาดฟอนต์อัตโนมัติ หากข้อความยาวเกินไป
                 const maxWidth = outputSize * 0.9;
                 let textWidth = ctx.measureText(textTitle).width;
                 if (textWidth > maxWidth) {
@@ -442,7 +457,6 @@
                     ctx.font = `600 ${fontSize}px K2D, sans-serif`;
                 }
                 
-                // วาดตัวอักษรลงกึ่งกลางพื้นที่ด้านล่าง
                 ctx.fillText(textTitle, outputSize / 2, outputSize + (textPadding / 2));
             }
         }
