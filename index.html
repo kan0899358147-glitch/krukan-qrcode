@@ -454,12 +454,15 @@
             }, 600);
         }
 
-        async function renderFinal(source, outputSize) {
+       async function renderFinal(source, outputSize) {
             const canvas = document.getElementById('display-canvas');
             const ctx = canvas.getContext('2d');
             const bgColor = document.getElementById('bg-color').value;
             const qrColor = document.getElementById('qr-color').value;
             const textTitle = document.getElementById('qr-title').value.trim();
+            
+            // เพิ่มคำสั่งให้ระบบ "รอ" จนกว่าฟอนต์ K2D (และฟอนต์อื่นๆ) จะโหลดเสร็จสมบูรณ์
+            await document.fonts.ready;
             
             const textPadding = textTitle ? (outputSize * 0.15) : 0;
             
@@ -505,13 +508,14 @@
                 ctx.textBaseline = 'middle';
                 
                 let fontSize = outputSize * 0.06;
-                ctx.font = `600 ${fontSize}px K2D, sans-serif`;
+                // บังคับใช้ฟอนต์ K2D โดยใส่เครื่องหมายคำพูดครอบชื่อฟอนต์ไว้
+                ctx.font = `600 ${fontSize}px "K2D", sans-serif`;
                 
                 const maxWidth = outputSize * 0.9;
                 let textWidth = ctx.measureText(textTitle).width;
                 if (textWidth > maxWidth) {
                     fontSize = fontSize * (maxWidth / textWidth);
-                    ctx.font = `600 ${fontSize}px K2D, sans-serif`;
+                    ctx.font = `600 ${fontSize}px "K2D", sans-serif`;
                 }
                 
                 ctx.fillText(textTitle, outputSize / 2, outputSize + (textPadding / 2));
