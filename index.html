@@ -23,7 +23,6 @@
         .icon-option.active { border-color: #3b82f6; background-color: #eff6ff; transform: scale(1.05); }
         .loading-spin { animation: spin 1s linear infinite; }
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        /* แต่งปุ่มเลือกสีให้สวยงาม */
         input[type="color"] {
             -webkit-appearance: none;
             border: none;
@@ -65,7 +64,6 @@
                     </div>
                 </div>
 
-                <!-- เพิ่มช่องใส่ชื่อเรื่องใต้ QR Code -->
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">ข้อความใต้ QR Code (ไม่ใส่ก็ได้)</label>
                     <input type="text" id="qr-title" placeholder="เช่น สื่อการสอน ม.1, ดาวน์โหลดเอกสาร" 
@@ -104,7 +102,7 @@
 
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-3 uppercase">เลือกไอคอนตรงกลาง</label>
-                    <div class="grid grid-cols-4 sm:grid-cols-5 gap-3" id="icon-selector">
+                    <div class="grid grid-cols-4 sm:grid-cols-6 gap-3" id="icon-selector">
                         <button onclick="selectIcon('none')" class="icon-option active flex flex-col items-center p-3 rounded-2xl bg-gray-50 border-2 border-gray-100" data-icon="none">
                             <i class="fas fa-times text-gray-400 text-2xl"></i>
                             <span class="text-[10px] mt-1 font-medium">ไม่มี</span>
@@ -145,6 +143,14 @@
                             <i class="fas fa-map-marker-alt text-red-500 text-2xl"></i>
                             <span class="text-[10px] mt-1 font-medium">Maps</span>
                         </button>
+                        <button onclick="selectIcon('appsheet')" class="icon-option flex flex-col items-center p-3 rounded-2xl bg-gray-50 border-2 border-gray-100" data-icon="appsheet">
+                            <i class="fas fa-mobile-alt text-blue-500 text-2xl"></i>
+                            <span class="text-[10px] mt-1 font-medium text-center leading-tight">AppSheet</span>
+                        </button>
+                        <button onclick="selectIcon('appscript')" class="icon-option flex flex-col items-center p-3 rounded-2xl bg-gray-50 border-2 border-gray-100" data-icon="appscript">
+                            <i class="fas fa-code text-emerald-500 text-2xl"></i>
+                            <span class="text-[10px] mt-1 font-medium text-center leading-tight">AppScript</span>
+                        </button>
                     </div>
                     <div class="mt-3">
                         <button onclick="document.getElementById('custom-icon').click()" class="w-full py-2 border-2 border-dashed border-gray-200 rounded-xl text-sm text-gray-500 hover:bg-gray-50 transition-all" id="custom-btn-ui">
@@ -160,10 +166,8 @@
                 </button>
             </div>
 
-            <!-- ส่วนแสดงผลเพิ่มการคลิกเพื่อทดสอบลิงก์ -->
             <div class="flex flex-col items-center justify-center bg-slate-50 rounded-[3rem] p-8 border-2 border-gray-200 min-h-[450px] relative text-center">
                 <div id="qr-raw-container"></div>
-                <!-- เปลี่ยน Canvas ให้เป็นปุ่มคลิกได้ -->
                 <canvas id="display-canvas" class="hidden cursor-pointer hover:scale-[1.02] transition-transform duration-300" title="คลิกเพื่อทดสอบเปิดลิงก์" onclick="testLink()"></canvas>
                 
                 <div id="placeholder-ui">
@@ -177,7 +181,6 @@
                     <button onclick="downloadQR()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-5 rounded-2xl font-bold shadow-xl transition-all flex items-center justify-center gap-3 text-lg">
                         <i class="fas fa-file-download text-2xl"></i> ดาวน์โหลดรูปภาพ (PNG)
                     </button>
-                    <!-- กล่องคำแนะนำการทำลิงก์ -->
                     <div class="bg-blue-50/80 border border-blue-100 text-blue-700 text-sm p-4 rounded-2xl text-left flex gap-3 shadow-sm">
                         <i class="fas fa-lightbulb text-xl shrink-0 text-blue-500"></i>
                         <p class="leading-relaxed">
@@ -213,7 +216,9 @@
             line: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiMwMEMzMDAiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzgwIDIzMGMwLTY1LTUwLTExNi0xMjQtMTE2UzEyMiAxNjUgMTIyIDIzMGMwIDU4IDQwIDEwNiAxMDQgMTE0bC03IDMwYy0xIDMgMiA2IDYgNGw1OC0yNmM3IDEgMTUgMiAyMSAyIDc0IDAgMTI0LTUxIDEyNC0xMTR6Ii8+PC9zdmc+',
             audio: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiM5MzMzRUEiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjU2IDExMmMtNzAuNyAwLTEyOCA1Ny4zLTEyOCAxMjh2MTEyYzAgMjYuNSAyMS41IDQ4IDQ4IDQ4aDMyYzE3LjcgMCAzMi0xNC4zIDMyLTMyVjI1NmMwLTE3LjctMTQuMy0zMi0zMi0zMmgtMzJ2LTE2YzAtNDQuMiAzNS44LTgwIDgwLTgwczgwIDM1LjggODAgODB2MTZoLTMyYy0xNy43IDAtMzIgMTQuMy0zMiAzMnYxMTJjMCAxNy43IDE0LjMgMzIgMzIgMzJoMzJjMjYuNSAwIDQ4LTIxLjUgNDgtNDhWMjQwYzAtNzAuNy01Ny4zLTEyOC0xMjgtMTI4eiIvPjwvc3ZnPg==',
             gform: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiM3MjQ4QjkiLz48cmVjdCB4PSIxNTYiIHk9IjE0NiIgd2lkdGg9IjIwMCIgaGVpZ2h0PSI0MCIgcng9IjEwIiBmaWxsPSIjZmZmZmZmIi8+PHJlY3QgeD0iMTU2IiB5PSIyMzYiIHdpZHRoPSIyMDAiIGhlaWdodD0iNDAiIHJ4PSIxMCIgZmlsbD0iI2ZmZmZmZiIvPjxyZWN0IHg9IjE1NiIgeT0iMzI2IiB3aWR0aD0iMTMwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNmZmZmZmYiLz48Y2lyY2xlIGN4PSIxMDYiIGN5PSIxNjYiIHI9IjIwIiBmaWxsPSIjZmZmZmZmIi8+PGNpcmNsZSBjeD0iMTA2IiBjeT0iMjU2IiByPSIyMCIgZmlsbD0iI2ZmZmZmZiIvPjxjaXJjbGUgY3g9IjEwNiIgY3k9IjM0NiIgcj0iMjAiIGZpbGw9IiNmZmZmZmYiLz48L3N2Zz4=',
-            gmap: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiNFQTQzMzUiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjU2IDQ4Yy03OS41IDAtMTQ0IDY0LjUtMTQ0IDE0NCAwIDEwOS4xIDE0NCAyNzIgMTQ0IDI3MnMxNDQtMTYyLjkgMTQ0LTI3MmMwLTc5LjUtNjQuNS0xNDQtMTQ0LTE0NHptMCAyMTZjLTM5LjggMC03Mi0zMi4yLTcyLTcyczMyLjItNzIgNzItNzIgNzIgMzIuMiA3MiA3Mi0zMi4yIDcyLTcyIDcyeiIvPjwvc3ZnPg=='
+            gmap: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiNFQTQzMzUiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjU2IDQ4Yy03OS41IDAtMTQ0IDY0LjUtMTQ0IDE0NCAwIDEwOS4xIDE0NCAyNzIgMTQ0IDI3MnMxNDQtMTYyLjkgMTQ0LTI3MmMwLTc5LjUtNjQuNS0xNDQtMTQ0LTE0NHptMCAyMTZjLTM5LjggMC03Mi0zMi4yLTcyLTcyczMyLjItNzIgNzItNzIgNzIgMzIuMiA3MiA3Mi0zMi4yIDcyLTcyIDcyeiIvPjwvc3ZnPg==',
+            appsheet: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiMxQTczRTgiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMTYwIDEyMGgxOTJjMjIuMSAwIDQwIDE3LjkgNDAgNDB2MTkyYzAgMjIuMS0xNy45IDQwLTQwIDQwSDE2MGMtMjIuMSAwLTQwLTE3LjktNDAtNDBWMTYwYzAtMjIuMSAxNy45LTQwIDQwLTQwem0wIDQwdjQ4aDE5MnYtNDhIMTYwem0wIDgwdjQ4aDgwdi00OGgtODB6bTExMiAwdjQ4aDgwdi00OGgtODB6bS0xMTIgODB2NDhoODB2LTQ4aC04MHptMTEyIDB2NDhoODB2LTQ4aC04MHoiLz48L3N2Zz4=',
+            appscript: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiMwRjlENTgiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMTc0LjYgMjU2bDEwMy44LTEwMy44LTMxLjEtMzEuMS0xMzUgMTM1IDEzNSAxMzUgMzEuMS0zMS4xTDE3NC42IDI1NnptMTYyLjgtMTM1bC0zMS4xIDMxLjEgMTAzLjggMTAzLjggMTAzLjggMTAzLjggMzEuMSAzMS4xIDEzNS0xMzUtMTM1LTEzNXoiLz48L3N2Zz4='
         };
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -271,7 +276,6 @@
             }
         }
 
-        // ระบบย่อลิงก์ใหม่: มีระบบ Timeout กันค้าง หมุนไม่เกิน 3-4 วินาทีต่อรอบ
         async function shortenLink() {
             let url = document.getElementById('qr-text').value.trim();
             if (!url) return alert("กรุณาใส่ลิงก์ก่อนครับ");
@@ -288,9 +292,8 @@
             
             let shortUrl = null;
 
-            // ฟังก์ชันช่วย: จับเวลา (Timeout) ถ้าเซิร์ฟเวอร์ตอบช้าเกิน 3 วินาที ให้ข้ามไปอันถัดไปเลย ป้องกันการหมุนค้าง
             const fetchWithTimeout = async (resource, options = {}) => {
-                const { timeout = 3000 } = options; // ตั้งเวลาตัดจบที่ 3 วินาที
+                const { timeout = 3000 } = options;
                 const controller = new AbortController();
                 const id = setTimeout(() => controller.abort(), timeout);
                 try {
@@ -303,7 +306,6 @@
                 }
             };
 
-            // แผนที่ 1: ใช้ Spoo.me (ยิงตรง 100% ไม่มีโฆษณา และไม่ติด CORS มักจะเร็วที่สุด)
             const trySpooMe = async () => {
                 const response = await fetchWithTimeout('https://spoo.me/', {
                     method: 'POST',
@@ -315,7 +317,6 @@
                 throw new Error("Spoo.me Failed");
             };
 
-            // แผนที่ 2: บังคับใช้ TinyURL ผ่าน Proxy (กรณี Spoo.me ล่ม)
             const tryTinyUrl = async () => {
                 const apiUrl = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`;
                 const proxies = [
@@ -338,11 +339,9 @@
                 throw new Error("TinyURL Failed");
             };
 
-            // แผนที่ 3: ใช้ is.gd เป็นตัวสำรองสุดท้าย
             const tryIsGd = () => new Promise((resolve, reject) => {
                 const callbackName = 'isgdCallback_' + Math.round(100000 * Math.random());
                 
-                // ตั้งเวลาตัดจบ 3 วินาทีสำหรับ is.gd
                 const timer = setTimeout(() => {
                     delete window[callbackName];
                     reject("is.gd timeout");
@@ -364,7 +363,6 @@
                 document.body.appendChild(script);
             });
 
-            // ลองรันตามลำดับ 1 -> 2 -> 3 ถ้าอันไหนดึงช้า จะถูกตัดจบใน 3 วิ แล้ววิ่งไปอันถัดไปทันที
             try {
                 try {
                     shortUrl = await trySpooMe();
@@ -454,14 +452,19 @@
             }, 600);
         }
 
-       async function renderFinal(source, outputSize) {
+        async function renderFinal(source, outputSize) {
             const canvas = document.getElementById('display-canvas');
             const ctx = canvas.getContext('2d');
             const bgColor = document.getElementById('bg-color').value;
             const qrColor = document.getElementById('qr-color').value;
             const textTitle = document.getElementById('qr-title').value.trim();
             
-            // เพิ่มคำสั่งให้ระบบ "รอ" จนกว่าฟอนต์ K2D (และฟอนต์อื่นๆ) จะโหลดเสร็จสมบูรณ์
+            // บังคับโหลดฟอนต์ K2D เฉพาะเจาะจงสำหรับ Canvas ก่อนวาด (แก้ปัญหาฟอนต์ไม่เปลี่ยนตอนกดสร้างทันที)
+            try {
+                await document.fonts.load('600 16px "K2D"');
+            } catch(e) {
+                console.log("Font load error:", e);
+            }
             await document.fonts.ready;
             
             const textPadding = textTitle ? (outputSize * 0.15) : 0;
@@ -508,7 +511,6 @@
                 ctx.textBaseline = 'middle';
                 
                 let fontSize = outputSize * 0.06;
-                // บังคับใช้ฟอนต์ K2D โดยใส่เครื่องหมายคำพูดครอบชื่อฟอนต์ไว้
                 ctx.font = `600 ${fontSize}px "K2D", sans-serif`;
                 
                 const maxWidth = outputSize * 0.9;
