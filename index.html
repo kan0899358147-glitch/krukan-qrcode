@@ -43,9 +43,10 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- คอลัมน์ซ้าย: ส่วนควบคุม -->
             <div class="space-y-6">
                 <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">ลิงก์ต้นทาง (URL)</label>
+                    <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">ลิงก์ต้นทาง (URL)</label>
                     <div class="flex gap-2">
                         <input type="text" id="qr-text" placeholder="https://www.example.com" 
                             class="flex-1 px-5 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all text-gray-700">
@@ -65,34 +66,34 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">ข้อความใต้ QR Code (ไม่ใส่ก็ได้)</label>
+                    <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">ข้อความใต้ QR Code (ฟอนต์ K2D)</label>
                     <input type="text" id="qr-title" placeholder="เช่น สื่อการสอน ม.1, ดาวน์โหลดเอกสาร" 
                         class="w-full px-5 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all text-gray-700">
                 </div>
 
                 <div class="grid grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">สีคิวอาร์โค้ด</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">สีคิวอาร์โค้ด</label>
                         <input type="color" id="qr-color" value="#000000" class="w-full h-14 cursor-pointer shadow-sm border-2 border-gray-100">
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">สีพื้นหลัง</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">สีพื้นหลัง</label>
                         <input type="color" id="bg-color" value="#ffffff" class="w-full h-14 cursor-pointer shadow-sm border-2 border-gray-100">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">ขนาด (PX)</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">ขนาด (PX)</label>
                         <select id="qr-size" class="w-full px-4 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 outline-none cursor-pointer bg-white">
                             <option value="256">256 px</option>
                             <option value="512" selected>512 px</option>
                             <option value="1024">1024 px (HD)</option>
-                            <option value="2048">2048 px (คมชัดสูง)</option>
+                            <option value="2048">2048 px (ชัดมาก)</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">ความละเอียด</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-2 uppercase tracking-wide">ความละเอียด</label>
                         <select id="qr-ecc" class="w-full px-4 py-4 border-2 border-gray-100 rounded-2xl focus:ring-4 focus:ring-blue-100 outline-none bg-white">
                             <option value="H" selected>สูงสุด (ใส่โลโก้)</option>
                             <option value="Q">ปานกลาง</option>
@@ -101,7 +102,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-sm font-bold text-gray-700 mb-3 uppercase">เลือกไอคอนตรงกลาง</label>
+                    <label class="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide">เลือกไอคอนตรงกลาง</label>
                     <div class="grid grid-cols-4 sm:grid-cols-6 gap-3" id="icon-selector">
                         <button onclick="selectIcon('none')" class="icon-option active flex flex-col items-center p-3 rounded-2xl bg-gray-50 border-2 border-gray-100" data-icon="none">
                             <i class="fas fa-times text-gray-400 text-2xl"></i>
@@ -143,13 +144,15 @@
                             <i class="fas fa-map-marker-alt text-red-500 text-2xl"></i>
                             <span class="text-[10px] mt-1 font-medium">Maps</span>
                         </button>
+                        <!-- Reverted AppSheet Icon -->
                         <button onclick="selectIcon('appsheet')" class="icon-option flex flex-col items-center p-3 rounded-2xl bg-gray-50 border-2 border-gray-100" data-icon="appsheet">
                             <i class="fas fa-mobile-alt text-blue-500 text-2xl"></i>
                             <span class="text-[10px] mt-1 font-medium text-center leading-tight">AppSheet</span>
                         </button>
+                        <!-- Reverted Apps Script Icon -->
                         <button onclick="selectIcon('appscript')" class="icon-option flex flex-col items-center p-3 rounded-2xl bg-gray-50 border-2 border-gray-100" data-icon="appscript">
                             <i class="fas fa-code text-emerald-500 text-2xl"></i>
-                            <span class="text-[10px] mt-1 font-medium text-center leading-tight">AppScript</span>
+                            <span class="text-[10px] mt-1 font-medium text-center leading-tight">AppsScript</span>
                         </button>
                     </div>
                     <div class="mt-3">
@@ -166,6 +169,7 @@
                 </button>
             </div>
 
+            <!-- คอลัมน์ขวา: พรีวิวและการดาวน์โหลด -->
             <div class="flex flex-col items-center justify-center bg-slate-50 rounded-[3rem] p-8 border-2 border-gray-200 min-h-[450px] relative text-center">
                 <div id="qr-raw-container"></div>
                 <canvas id="display-canvas" class="hidden cursor-pointer hover:scale-[1.02] transition-transform duration-300" title="คลิกเพื่อทดสอบเปิดลิงก์" onclick="testLink()"></canvas>
@@ -181,21 +185,22 @@
                     <button onclick="downloadQR()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-5 rounded-2xl font-bold shadow-xl transition-all flex items-center justify-center gap-3 text-lg">
                         <i class="fas fa-file-download text-2xl"></i> ดาวน์โหลดรูปภาพ (PNG)
                     </button>
-                    <div class="bg-blue-50/80 border border-blue-100 text-blue-700 text-sm p-4 rounded-2xl text-left flex gap-3 shadow-sm">
-                        <i class="fas fa-lightbulb text-xl shrink-0 text-blue-500"></i>
+                    <div class="bg-blue-50/80 border border-blue-100 text-blue-700 text-xs p-4 rounded-2xl text-left flex gap-3 shadow-sm">
+                        <i class="fas fa-lightbulb text-lg shrink-0 text-blue-500"></i>
                         <p class="leading-relaxed">
-                            <strong class="block mb-1">ทริค: วิธีทำให้รูปสแกนได้+คลิกได้!</strong>
-                            ไฟล์รูปภาพ (.png) จะคลิกในตัวเองไม่ได้ หากนำไปทำแบนเนอร์หรือใส่ใน <b>Word, PowerPoint, PDF หรือ Canva</b> ให้คุณครูคลิกขวาที่รูปแล้วเลือกคำสั่ง <b>"แทรกลิงก์" (Link)</b> เพื่อแปะลิงก์ทับรูป เพียงเท่านี้รูปก็จะคลิกได้ครับ!
+                            <strong class="block mb-1">วิธีทำให้สแกนได้ + คลิกได้!</strong>
+                            หากนำรูปไปใส่ใน <b>Word, PowerPoint, PDF หรือ Canva</b> ให้คุณครูคลิกขวาที่รูปแล้วเลือกคำสั่ง <b>"แทรกลิงก์" (Link)</b> เพื่อแปะลิงก์ทับรูปอีกครั้งครับ!
                         </p>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- ฟุตเตอร์ -->
         <div class="mt-12 pt-8 border-t border-gray-100 text-center">
             <p class="text-gray-500 font-medium tracking-wide leading-relaxed">
                 พัฒนาโดย : <span class="text-blue-600 font-bold">ครูกัญ กัญญาทิพ เสนาะวงศ์</span><br>
-                <span class="text-sm">ศูนย์ส่งเสริมการเรียนรู้ระดับอำเภอพุทธมณฑล</span>
+                <span class="text-xs text-gray-400 font-light">ศูนย์ส่งเสริมการเรียนรู้ระดับอำเภอพุทธมณฑล</span>
             </p>
             <p class="mt-4 text-sm text-gray-500 bg-gray-50 inline-block px-5 py-2.5 rounded-full border border-gray-200 shadow-sm">
                 <i class="fas fa-chart-line text-blue-500 mr-2"></i>จำนวนผู้เข้าใช้งาน: <span id="visitor-count" class="font-bold text-gray-700 text-base">กำลังโหลด...</span> ครั้ง
@@ -207,34 +212,36 @@
         let selectedIconType = 'none';
         let customIconBase64 = null;
 
+        // ข้อมูลรหัสภาพแบบฝัง (Reverted to original icons)
         const officialLogos = {
             website: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiMzQjgyRjYiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjE4MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMwIi8+PGVsbGlwc2UgY3g9IjI1NiIgY3k9IjI1NiIgcng9IjgwIiByeT0iMTgwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMzAiLz48cGF0aCBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMzAiIGQ9Ik03NiAyNTZoMzYwIE0xMjggMTUwaDI1NiBNMTI4IDM2MmgyNTYiLz48L3N2Zz4=',
             pdf: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMDAiIGZpbGw9IiNlMzM2MjYiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMTAwIDE2MGg2MGMzMCAwIDUwIDE1IDUwIDQ1cy0yMCA0NS01MCA0NWgtMjB2NzBoLTQweiBtNDAgMzB2MzBoMTVjMTUgMCAxNS0zMCAwLTMweiBNMjQwIDE2MGg0MGMzMCAwIDUwIDE1IDUwIDUwdjIwYzAgMzUtMjAgNTAtNTAgNTBoLTQweiBtNDAgMzB2NjBoMTBjMTUgMCAyMC0xMCAyMC0yNXYtMTBjMC0xNS01LTI1LTIwLTI1eiBNMzcwIDE2MGg3MHYzMGgtMzB2MjBoMjV2MzBoLTI1djgwaC00MHoiLz48L3N2Zz4=',
-            youtube: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTc2IDUxMiI+PHJlY3Qgd2lkdGg9IjU3NiIgaGVpZ2h0PSIzNjAiIHk9Ijc2IiByeD0iOTAiIGZpbGw9IiNGRjAwMDAiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjMwIDE4MHYxNTJsMTQwLTc2eiIvPjwvc3ZnPg==',
+            youtube: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTc2IDUxMiI+PHJlY3Qgd2lkdGg9IjU3NiIgaGVpZ2h0PSI0MDAiIHk9Ijc2IiByeD0iOTAiIGZpbGw9IiNGRjAwMDAiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjMwIDE4MHYxNTJsMTQwLTc2eiIvPjwvc3ZnPg==',
             google: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNDggNDgiPjxyZWN0IHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgcng9IjEwIiBmaWxsPSIjZmZmZmZmIi8+PHBhdGggZmlsbD0iI0VBNDMzNSIgZD0iTTI0IDkuNWMzLjU0IDAgNi43MSAxLjIyIDkuMjEgMy42bDYuODUtNi44NUMzNS45IDIuMzggMzAuNDcgMCAyNCAwIDE0LjYyIDAgNi41MSA1LjM4IDIuNTYgMTMuMjlsNy45OCA2LjE5QzEyLjQzIDEzLjcyIDE3Ljc0IDkuNSAyNCA5LjV6Ii8+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTQ2Ljk4IDI0LjU1YzAtMS41Ny0uMTUtMy4wOS0uMzgtNC41NUgyNHY5LjAyaDEyLjk0Yy0uNTggMi45Ni0yLjI2IDUuNDgtNC43OCA3LjE4bDcuNzMgNmM0LjUxLTQuMTggNy4wOS0xMC4zNiA3LjA5LTE3LjY1eiIvPjxwYXRoIGZpbGw9IiNGQkJDMDUiIGQ9Ik0xMC41MyAyOC41OWMtLjQ4LTEuNDUtLjc2LTIuOTktLjc2LTQuNTlzLjI3LTMuMTQuNzYtNC41OWwtNy45OC02LjE5Qy45MiAxNi40NiAwIDIwLjEyIDAgMjRzLjkyIDcuNTQgMi41NiAxMC43OGw3Ljk3LTYuMTl6Ii8+PHBhdGggZmlsbD0iIzM0QThVMyIgZD0iTTI0IDQ4YzYuNDggMCAxMS45My0yLjEzIDE1Ljg5LTUuODFsLTcuNzMtNmMtMi4xNSAxLjQ1LTQuOTIgMi4zLTguMTYgMi4zLTYuMjYgMC0xMS41Ny00LjIyLTEzLjQ3LTkuOTFsLTcuOTggNi4xOUM2LjUxIDQyLjYyIDE0LjYyIDQ4IDI0IDQ4eiIvPjwvc3ZnPg==',
             facebook: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiMxODc3RjIiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzMyIDI1NmgtNDV2MTgzaC03NlYyNTZoLTMydi02NGgzMnYtNDNjMC01OSAzNi05MiA5MC05MiAyMyAwIDQ3IDQgNDcgNHY2MGgtMzFjLTI5IDAtMzQgMTQtMzQgMzN2NDJoNjRsLTExIDY0eiIvPjwvc3ZnPg==',
             line: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiMwMEMzMDAiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzgwIDIzMGMwLTY1LTUwLTExNi0xMjQtMTE2UzEyMiAxNjUgMTIyIDIzMGMwIDU4IDQwIDEwNiAxMDQgMTE0bC03IDMwYy0xIDMgMiA2IDYgNGw1OC0yNmM3IDEgMTUgMiAyMSAyIDc0IDAgMTI0LTUxIDEyNC0xMTR6Ii8+PC9zdmc+',
             audio: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiM5MzMzRUEiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjU2IDExMmMtNzAuNyAwLTEyOCA1Ny4zLTEyOCAxMjh2MTEyYzAgMjYuNSAyMS41IDQ4IDQ4IDQ4aDMyYzE3LjcgMCAzMi0xNC4zIDMyLTMyVjI1NmMwLTE3LjctMTQuMy0zMi0zMi0zMmgtMzJ2LTE2YzAtNDQuMiAzNS44LTgwIDgwLTgwczgwIDM1LjggODAgODB2MTZoLTMyYy0xNy43IDAtMzIgMTQuMy0zMiAzMnYxMTJjMCAxNy43IDE0LjMgMzIgMzIgMzJoMzJjMjYuNSAwIDQ4LTIxLjUgNDgtNDhWMjQwYzAtNzAuNy01Ny4zLTEyOC0xMjgtMTI4eiIvPjwvc3ZnPg==',
             gform: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiM3MjQ4QjkiLz48cmVjdCB4PSIxNTYiIHk9IjE0NiIgd2lkdGg9IjIwMCIgaGVpZ2h0PSI0MCIgcng9IjEwIiBmaWxsPSIjZmZmZmZmIi8+PHJlY3QgeD0iMTU2IiB5PSIyMzYiIHdpZHRoPSIyMDAiIGhlaWdodD0iNDAiIHJ4PSIxMCIgZmlsbD0iI2ZmZmZmZiIvPjxyZWN0IHg9IjE1NiIgeT0iMzI2IiB3aWR0aD0iMTMwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNmZmZmZmYiLz48Y2lyY2xlIGN4PSIxMDYiIGN5PSIxNjYiIHI9IjIwIiBmaWxsPSIjZmZmZmZmIi8+PGNpcmNsZSBjeD0iMTA2IiBjeT0iMjU2IiByPSIyMCIgZmlsbD0iI2ZmZmZmZiIvPjxjaXJjbGUgY3g9IjEwNiIgY3k9IjM0NiIgcj0iMjAiIGZpbGw9IiNmZmZmZmYiLz48L3N2Zz4=',
             gmap: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiNFQTQzMzUiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjU2IDQ4Yy03OS41IDAtMTQ0IDY0LjUtMTQ0IDE0NCAwIDEwOS4xIDE0NCAyNzIgMTQ0IDI3MnMxNDQtMTYyLjkgMTQ0LTI3MmMwLTc5LjUtNjQuNS0xNDQtMTQ0LTE0NHptMCAyMTZjLTM5LjggMC03Mi0zMi4yLTcyLTcyczMyLjItNzIgNzItNzIgNzIgMzIuMiA3MiA3Mi0zMi4yIDcyLTcyIDcyeiIvPjwvc3ZnPg==',
-            appsheet: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiMxQTczRTgiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMTYwIDEyMGgxOTJjMjIuMSAwIDQwIDE3LjkgNDAgNDB2MTkyYzAgMjIuMS0xNy45IDQwLTQwIDQwSDE2MGMtMjIuMSAwLTQwLTE3LjktNDAtNDBWMTYwYzAtMjIuMSAxNy45LTQwIDQwLTQwem0wIDQwdjQ4aDE5MnYtNDhIMTYwem0wIDgwdjQ4aDgwdi00OGgtODB6bTExMiAwdjQ4aDgwdi00OGgtODB6bS0xMTIgODB2NDhoODB2LTQ4aC04MHptMTEyIDB2NDhoODB2LTQ4aC04MHoiLz48L3N2Zz4=',
-            appscript: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiMwRjlENTgiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMTc0LjYgMjU2bDEwMy44LTEwMy44LTMxLjEtMzEuMS0xMzUgMTM1IDEzNSAxMzUgMzEuMS0zMS4xTDE3NC42IDI1NnptMTYyLjgtMTM1bC0zMS4xIDMxLjEgMTAzLjggMTAzLjggMTAzLjggMTAzLjggMzEuMSAzMS4xIDEzNS0xMzUtMTM1LTEzNXoiLz48L3N2Zz4='
+            // Original AppSheet Icon (Mobile phone)
+            appsheet: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzODQgNTEyIj48cGF0aCBmaWxsPSIjMUE3M0U4IiBkPSJNMCIDY0QzAgMjguNyAyOC43IDAgNjQgMGgyNTZjMzUuMyAwIDY0IDI4LjcgNjQgNjR2Mzg0YzAgMzUuMy0yOC43IDY0LTY0IDY0SDY0Yy0zNS4zIDAtNjQtMjguNy02NC02NFY2NHptMTI4IDQ0OGMwdTkgLjQgOCAxOCA4czE4LTguMSAxOC0xOGMwLTkuOS04LTE4LTE4LTE4cy0xOCA4LjEtMTggMTh6TTMyIDY0djM4NGgyNTZWNjRIMzJ6Ii8+PC9zdmc+',
+            // Original Apps Script Icon (Code symbol)
+            appscript: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNTEyIj48cGF0aCBmaWxsPSIjMEY5RDU4IiBkPSJNMjc4LjYgMjU2bDE2OC4yLTExMi4xYzQuOC0zLjIgNC44LTEwLjIgMC0xMy40bC0yNC0xNiBjLTQuOC0zLjItMTEuMi0zLjItMTYgMGwtMTkyIDEyOGMtNC44IDMuMi00LjggMTAuMiAwIDEzLjRsMTkyIDEyOGM0LjggMy4yIDExLjIgMy4yIDE2IDBsMjQtMTYgYzQuOC0zLjIgNC44LTEwLjIgMC0xMy40TDI3OC42IDI1NnptODEuNCIDBsLTE2OC4yIDExMi4xYy00LjggMy4yLTQuOCAxMC4yIDAgMTMuNGwyNCAxNiBjNC44IDMuMiAxMS4yIDMuMiAxNiAwbDE5Mi0xMjhjNC44LTMuMiA0LjgtMTAuMiAwLTEzLjRsLTE5Mi0xMjhjLTQuOC0zLjItMTEuMi0zLjItMTYgMGwtMjQgMTYgYy00LjggMy4yLTQuOCAxMC4yIDAgMTMuNEwzNjAgMjU2eiIvPjwvc3ZnPg=='
         };
 
         document.addEventListener('DOMContentLoaded', function() {
+            // สถิติ
             fetch('https://api.counterapi.dev/v1/krukan_qr_app_v1/visits/up')
                 .then(response => response.json())
                 .then(data => {
                     const countEl = document.getElementById('visitor-count');
-                    if (countEl && data.count) {
-                        countEl.innerText = data.count.toLocaleString();
-                    }
+                    if (countEl && data.count) countEl.innerText = data.count.toLocaleString();
                 })
-                .catch(err => {
-                    const countEl = document.getElementById('visitor-count');
-                    if (countEl) countEl.innerText = "ไม่สามารถโหลดได้";
+                .catch(() => {
+                    document.getElementById('visitor-count').innerText = "-";
                 });
 
+            // อัปโหลดโลโก้เอง
             const customInput = document.getElementById('custom-icon');
             if(customInput) {
                 customInput.addEventListener('change', function(e) {
@@ -245,8 +252,7 @@
                             customIconBase64 = event.target.result;
                             selectedIconType = 'custom';
                             document.querySelectorAll('.icon-option').forEach(btn => btn.classList.remove('active'));
-                            const customBtnUi = document.getElementById('custom-btn-ui');
-                            if(customBtnUi) customBtnUi.classList.add('active');
+                            document.getElementById('custom-btn-ui').classList.add('active');
                         };
                         reader.readAsDataURL(file);
                     }
@@ -257,33 +263,22 @@
         function selectIcon(type) {
             selectedIconType = type;
             document.querySelectorAll('.icon-option').forEach(btn => btn.classList.remove('active'));
-            if(type !== 'none' && type !== 'custom') {
-                const btn = document.querySelector(`[data-icon="${type}"]`);
-                if(btn) btn.classList.add('active');
-            } else if(type === 'none') {
-                document.querySelector('[data-icon="none"]').classList.add('active');
-            }
+            const btn = document.querySelector(`[data-icon="${type}"]`);
+            if(btn) btn.classList.add('active');
         }
 
         function testLink() {
             const url = document.getElementById('qr-text').value.trim();
             if(url) {
-                if (!/^https?:\/\//i.test(url)) {
-                    window.open('https://' + url, '_blank');
-                } else {
-                    window.open(url, '_blank');
-                }
+                const finalUrl = /^https?:\/\//i.test(url) ? url : 'https://' + url;
+                window.open(finalUrl, '_blank');
             }
         }
 
         async function shortenLink() {
             let url = document.getElementById('qr-text').value.trim();
             if (!url) return alert("กรุณาใส่ลิงก์ก่อนครับ");
-
-            if (!/^https?:\/\//i.test(url)) {
-                url = 'https://' + url;
-                document.getElementById('qr-text').value = url;
-            }
+            if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
 
             const btn = document.getElementById('shorten-btn');
             const textSpan = document.getElementById('shorten-text');
@@ -293,7 +288,7 @@
             let shortUrl = null;
 
             const fetchWithTimeout = async (resource, options = {}) => {
-                const { timeout = 3000 } = options;
+                const { timeout = 3500 } = options;
                 const controller = new AbortController();
                 const id = setTimeout(() => controller.abort(), timeout);
                 try {
@@ -306,63 +301,29 @@
                 }
             };
 
-            // แผนที่ 1: is.gd (รับประกันไม่มีโฆษณา 100% ยิงตรงเสมอ และทะลุบล็อกด้วย JSONP)
             const tryIsGd = () => new Promise((resolve, reject) => {
-                const callbackName = 'isgdCallback_' + Math.round(100000 * Math.random());
-                
-                const timer = setTimeout(() => {
-                    delete window[callbackName];
-                    reject("is.gd timeout");
-                }, 3000);
-
-                window[callbackName] = function(data) {
-                    clearTimeout(timer);
-                    delete window[callbackName];
-                    if (data.shorturl) resolve(data.shorturl);
-                    else reject(data.errormessage);
-                };
-                const script = document.createElement('script');
-                script.src = `https://is.gd/create.php?format=json&url=${encodeURIComponent(url)}&callback=${callbackName}`;
-                script.onerror = () => {
-                    clearTimeout(timer);
-                    delete window[callbackName];
-                    reject("is.gd failed");
-                };
-                document.body.appendChild(script);
+                const cb = 'isgdCallback_' + Math.round(100000 * Math.random());
+                const timer = setTimeout(() => { delete window[cb]; reject(); }, 3500);
+                window[cb] = (d) => { clearTimeout(timer); delete window[cb]; if (d.shorturl) resolve(d.shorturl); else reject(); };
+                const s = document.createElement('script');
+                s.src = `https://is.gd/create.php?format=json&url=${encodeURIComponent(url)}&callback=${cb}`;
+                s.onerror = () => { clearTimeout(timer); delete window[cb]; reject(); };
+                document.body.appendChild(s);
             });
 
-            // แผนที่ 2: TinyURL (รับประกันไม่มีโฆษณา ยิงตรงเสมอ)
             const tryTinyUrl = async () => {
-                const apiUrl = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`;
-                const proxies = [
-                    `https://api.allorigins.win/get?url=${encodeURIComponent(apiUrl)}`,
-                    `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiUrl)}`
-                ];
-                
-                for (let proxy of proxies) {
-                    try {
-                        const response = await fetchWithTimeout(proxy);
-                        if (proxy.includes('allorigins')) {
-                            const data = await response.json();
-                            if (data.contents && data.contents.match(/^https?:\/\//i)) return data.contents;
-                        } else {
-                            const text = await response.text();
-                            if (text && text.match(/^https?:\/\//i)) return text;
-                        }
-                    } catch (e) { continue; }
-                }
-                throw new Error("TinyURL Failed");
+                const api = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`;
+                const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(api)}`;
+                const res = await fetchWithTimeout(proxy);
+                const d = await res.json();
+                if (d.contents && d.contents.startsWith('http')) return d.contents;
+                throw new Error();
             };
 
-            // ลอง is.gd ก่อนเพราะไม่มีโฆษณาแน่นอน ถ้าล่มค่อยไป TinyURL
             try {
                 shortUrl = await tryIsGd();
-            } catch (e1) {
-                try {
-                    shortUrl = await tryTinyUrl();
-                } catch (e2) {
-                    console.log("All methods failed");
-                }
+            } catch (e) {
+                try { shortUrl = await tryTinyUrl(); } catch (e2) {}
             }
 
             btn.disabled = false;
@@ -374,7 +335,7 @@
                 document.getElementById('qr-text').value = shortUrl; 
                 generateQRCode();
             } else {
-                alert("เกิดข้อผิดพลาด: ไม่สามารถย่อลิงก์ได้\n\nสาเหตุที่เป็นไปได้:\n1. เครือข่ายอินเทอร์เน็ตของโรงเรียนมีการบล็อกบริการย่อลิงก์\n2. ลิงก์ต้นทางอาจผิดรูปแบบครับ");
+                alert("ระบบย่อลิงก์ขัดข้องชั่วคราว แต่คุณสามารถใช้ลิงก์เดิมสร้าง QR Code ได้เลยครับ");
             }
         }
 
@@ -382,60 +343,43 @@
             const input = document.getElementById('short-url-result');
             input.select();
             document.execCommand('copy');
-            const icon = document.getElementById('copy-icon');
-            icon.className = "fas fa-check text-emerald-500";
-            setTimeout(() => icon.className = "fas fa-copy", 2000);
+            document.getElementById('copy-icon').className = "fas fa-check text-emerald-500";
+            setTimeout(() => document.getElementById('copy-icon').className = "fas fa-copy", 2000);
         }
 
         function generateQRCode() {
             const text = document.getElementById('qr-text').value.trim();
+            if (!text) return alert("กรุณากรอกลิงก์ก่อนครับ");
+
             const size = parseInt(document.getElementById('qr-size').value);
             const ecc = document.getElementById('qr-ecc').value;
             const qrColor = document.getElementById('qr-color').value;
             const bgColor = document.getElementById('bg-color').value;
             const container = document.getElementById('qr-raw-container');
-            const canvas = document.getElementById('display-canvas');
-            const actionArea = document.getElementById('action-area');
-            const placeholder = document.getElementById('placeholder-ui');
-
-            if (!text) return alert("กรุณากรอกลิงก์ก่อนครับ");
 
             container.innerHTML = "";
-            
             try {
                 new QRCode(container, {
-                    text: text,
-                    width: 1024,
-                    height: 1024,
-                    colorDark: qrColor,
-                    colorLight: bgColor,
+                    text: text, width: 1024, height: 1024,
+                    colorDark: qrColor, colorLight: bgColor,
                     correctLevel: QRCode.CorrectLevel[ecc]
                 });
             } catch (err) {
-                try {
-                    container.innerHTML = "";
-                    new QRCode(container, {
-                        text: text,
-                        width: 1024,
-                        height: 1024,
-                        colorDark: qrColor,
-                        colorLight: bgColor,
-                        correctLevel: QRCode.CorrectLevel.L
-                    });
-                    alert("⚠️ ลิงก์ยาวเกินไป ระบบปรับลดความละเอียดลงอัตโนมัติ แนะนำให้ 'ย่อลิงก์' ก่อนกดสร้างครับ");
-                } catch (finalErr) {
-                    alert("❌ ลิงก์ของคุณยาวเกินขีดจำกัด กรุณากดปุ่ม 'ย่อลิงก์' ก่อนสร้างครับ");
-                    return;
-                }
+                container.innerHTML = "";
+                new QRCode(container, {
+                    text: text, width: 1024, height: 1024,
+                    colorDark: qrColor, colorLight: bgColor,
+                    correctLevel: QRCode.CorrectLevel.L
+                });
             }
 
             setTimeout(async () => {
                 const rawCanvas = container.querySelector('canvas');
                 if (rawCanvas) {
                     await renderFinal(rawCanvas, size);
-                    placeholder.classList.add('hidden');
-                    canvas.classList.remove('hidden');
-                    actionArea.classList.remove('hidden');
+                    document.getElementById('placeholder-ui').classList.add('hidden');
+                    document.getElementById('display-canvas').classList.remove('hidden');
+                    document.getElementById('action-area').classList.remove('hidden');
                 }
             }, 600);
         }
@@ -447,67 +391,57 @@
             const qrColor = document.getElementById('qr-color').value;
             const textTitle = document.getElementById('qr-title').value.trim();
             
-            // บังคับโหลดฟอนต์ K2D เฉพาะเจาะจงสำหรับ Canvas ก่อนวาด (แก้ปัญหาฟอนต์ไม่เปลี่ยนตอนกดสร้างทันที)
-            try {
-                await document.fonts.load('600 16px "K2D"');
-            } catch(e) {
-                console.log("Font load error:", e);
-            }
+            // Force load font K2D
+            try { await document.fonts.load('600 16px "K2D"'); } catch(e) {}
             await document.fonts.ready;
             
-            const textPadding = textTitle ? (outputSize * 0.15) : 0;
-            
+            const textPadding = textTitle ? (outputSize * 0.18) : 0;
             canvas.width = outputSize;
             canvas.height = outputSize + textPadding;
 
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = 'high';
-            
             ctx.fillStyle = bgColor;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
             ctx.drawImage(source, 0, 0, outputSize, outputSize);
 
             let logoSrc = (selectedIconType === 'custom') ? customIconBase64 : officialLogos[selectedIconType];
 
-            if (logoSrc) {
+            if (logoSrc && selectedIconType !== 'none') {
                 const img = new Image();
-                img.src = logoSrc;
-                await img.decode();
-
-                const logoScale = 0.22;
-                const logoSizeValue = outputSize * logoScale;
-                const x = (outputSize - logoSizeValue) / 2;
-                const y = (outputSize - logoSizeValue) / 2;
-                const pad = outputSize * 0.04;
-                
-                ctx.fillStyle = bgColor; 
-                ctx.beginPath();
-                const r = outputSize * 0.05;
-                if (ctx.roundRect) {
-                    ctx.roundRect(x - pad, y - pad, logoSizeValue + pad * 2, logoSizeValue + pad * 2, r);
-                } else {
-                    ctx.rect(x - pad, y - pad, logoSizeValue + pad * 2, logoSizeValue + pad * 2);
+                try {
+                    img.src = logoSrc;
+                    await new Promise((resolve, reject) => {
+                        img.onload = resolve;
+                        img.onerror = reject;
+                    });
+                    
+                    const logoSizeValue = outputSize * 0.22;
+                    const x = (outputSize - logoSizeValue) / 2;
+                    const y = (outputSize - logoSizeValue) / 2;
+                    const pad = outputSize * 0.04;
+                    
+                    ctx.fillStyle = bgColor; 
+                    ctx.beginPath();
+                    if (ctx.roundRect) ctx.roundRect(x - pad, y - pad, logoSizeValue + pad * 2, logoSizeValue + pad * 2, outputSize * 0.06);
+                    else ctx.rect(x - pad, y - pad, logoSizeValue + pad * 2, logoSizeValue + pad * 2);
+                    ctx.fill();
+                    ctx.drawImage(img, x, y, logoSizeValue, logoSizeValue);
+                } catch (e) {
+                    console.error("Image draw error:", e);
                 }
-                ctx.fill();
-                ctx.drawImage(img, x, y, logoSizeValue, logoSizeValue);
             }
 
             if (textTitle) {
                 ctx.fillStyle = qrColor;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                
-                let fontSize = outputSize * 0.06;
-                ctx.font = `600 ${fontSize}px "K2D", sans-serif`;
-                
-                const maxWidth = outputSize * 0.9;
-                let textWidth = ctx.measureText(textTitle).width;
-                if (textWidth > maxWidth) {
-                    fontSize = fontSize * (maxWidth / textWidth);
-                    ctx.font = `600 ${fontSize}px "K2D", sans-serif`;
+                let fontSize = outputSize * 0.07;
+                ctx.font = `600 ${fontSize}px "K2D"`;
+                const maxWidth = outputSize * 0.92;
+                let tw = ctx.measureText(textTitle).width;
+                if (tw > maxWidth) {
+                    fontSize = fontSize * (maxWidth / tw);
+                    ctx.font = `600 ${fontSize}px "K2D"`;
                 }
-                
                 ctx.fillText(textTitle, outputSize / 2, outputSize + (textPadding / 2));
             }
         }
