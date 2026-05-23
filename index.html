@@ -39,7 +39,7 @@
     <div class="bg-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl max-w-5xl w-full border border-gray-100">
         <div class="text-center mb-10">
             <h1 class="text-4xl font-extrabold text-blue-600 mb-2">QR Code & Short Link</h1>
-            <p class="text-gray-500 text-lg">สร้าง QR Code สวยงาม พร้อมย่อลิงก์ตรง ไม่มีโฆษณาคั่น</p>
+            <p class="text-gray-500 text-lg">สร้าง QR Code สวยงาม พร้อมย่อลิงก์ตรง ไม่มีโฆษณาและหน้าเตือนคั่น</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -144,12 +144,12 @@
                             <i class="fas fa-map-marker-alt text-red-500 text-2xl"></i>
                             <span class="text-[10px] mt-1 font-medium">Maps</span>
                         </button>
-                        <!-- Reverted AppSheet Icon -->
+                        <!-- ไอคอน AppSheet แบบคลาสสิกดั้งเดิม (รูปมือถือ) -->
                         <button onclick="selectIcon('appsheet')" class="icon-option flex flex-col items-center p-3 rounded-2xl bg-gray-50 border-2 border-gray-100" data-icon="appsheet">
                             <i class="fas fa-mobile-alt text-blue-500 text-2xl"></i>
                             <span class="text-[10px] mt-1 font-medium text-center leading-tight">AppSheet</span>
                         </button>
-                        <!-- Reverted Apps Script Icon -->
+                        <!-- ไอคอน Apps Script แบบคลาสสิกดั้งเดิม (เครื่องหมายโค้ด) -->
                         <button onclick="selectIcon('appscript')" class="icon-option flex flex-col items-center p-3 rounded-2xl bg-gray-50 border-2 border-gray-100" data-icon="appscript">
                             <i class="fas fa-code text-emerald-500 text-2xl"></i>
                             <span class="text-[10px] mt-1 font-medium text-center leading-tight">AppsScript</span>
@@ -212,25 +212,25 @@
         let selectedIconType = 'none';
         let customIconBase64 = null;
 
-        // ข้อมูลรหัสภาพแบบฝัง (Reverted to original icons)
+        // ข้อมูลรหัสภาพแบบฝังเพื่อแก้ปัญหาโหลดล่ม
         const officialLogos = {
             website: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiMzQjgyRjYiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjE4MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMwIi8+PGVsbGlwc2UgY3g9IjI1NiIgY3k9IjI1NiIgcng9IjgwIiByeT0iMTgwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMzAiLz48cGF0aCBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMzAiIGQ9Ik03NiAyNTZoMzYwIE0xMjggMTUwaDI1NiBNMTI4IDM2MmgyNTYiLz48L3N2Zz4=',
-            pdf: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMDAiIGZpbGw9IiNlMzM2MjYiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMTAwIDE2MGg2MGMzMCAwIDUwIDE1IDUwIDQ1cy0yMCA0NS01MCA0NWgtMjB2NzBoLTQweiBtNDAgMzB2MzBoMTVjMTUgMCAxNS0zMCAwLTMweiBNMjQwIDE2MGg0MGMzMCAwIDUwIDE1IDUwIDUwdjIwYzAgMzUtMjAgNTAtNTAgNTBoLTQweiBtNDAgMzB2NjBoMTBjMTUgMCAyMC0xMCAyMC0yNXYtMTBjMC0xNS01LTI1LTIwLTI1eiBNMzcwIDE2MGg3MHYzMGgtMzB2MjBoMjV2MzBoLTI1djgwaC00MHoiLz48L3N2Zz4=',
-            youtube: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTc2IDUxMiI+PHJlY3Qgd2lkdGg9IjU3NiIgaGVpZ2h0PSI0MDAiIHk9Ijc2IiByeD0iOTAiIGZpbGw9IiNGRjAwMDAiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjMwIDE4MHYxNTJsMTQwLTc2eiIvPjwvc3ZnPg==',
+            pdf: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMDAiIGZpbGw9IiNlMzM2MjYiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMTAwIDE2MGg2MGMzMCAwIDUwIDE1IDUwIDQ1cy0yMCA0NS01MCA0NWgtMjB2NzBoLTQweiBtNDAgMzB2MzBoRMUxYyAxNSAwIDE1LTMwIDAtMzAweiBNMjQwIDE2MGg0MGMzMCAwIDUwIDE1IDUwIDUwdjIwYzAgMzUtMjAgNTAtNTAgNTBoLTQweiBtNDAgMzB2NjBoMTBjMTUgMCAyMC0xMCAyMC0yNXYtMTBjMC0xNS01LTI1LTIwLTI1eiBNMzcwIDE2MGg3MHYzMGgtMzB2MjBoMjV2MzBoLTI1djgwaC00MHoiLz48L3N2Zz4=',
+            youtube: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTc2IDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI0MDAiIHk9Ijc2IiByeD0iOTAiIGZpbGw9IiNGRjAwMDAiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjMwIDE4MHYxNTJsMTQwLTc2eiIvPjwvc3ZnPg==',
             google: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNDggNDgiPjxyZWN0IHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgcng9IjEwIiBmaWxsPSIjZmZmZmZmIi8+PHBhdGggZmlsbD0iI0VBNDMzNSIgZD0iTTI0IDkuNWMzLjU0IDAgNi43MSAxLjIyIDkuMjEgMy42bDYuODUtNi44NUMzNS45IDIuMzggMzAuNDcgMCAyNCAwIDE0LjYyIDAgNi41MSA1LjM4IDIuNTYgMTMuMjlsNy45OCA2LjE5QzEyLjQzIDEzLjcyIDE3Ljc0IDkuNSAyNCA5LjV6Ii8+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTQ2Ljk4IDI0LjU1YzAtMS41Ny0uMTUtMy4wOS0uMzgtNC41NUgyNHY5LjAyaDEyLjk0Yy0uNTggMi45Ni0yLjI2IDUuNDgtNC43OCA3LjE4bDcuNzMgNmM0LjUxLTQuMTggNy4wOS0xMC4zNiA3LjA5LTE3LjY1eiIvPjxwYXRoIGZpbGw9IiNGQkJDMDUiIGQ9Ik0xMC41MyAyOC41OWMtLjQ4LTEuNDUtLjc2LTIuOTktLjc2LTQuNTlzLjI3LTMuMTQuNzYtNC41OWwtNy45OC02LjE5Qy45MiAxNi40NiAwIDIwLjEyIDAgMjRzLjkyIDcuNTQgMi41NiAxMC43OGw3Ljk3LTYuMTl6Ii8+PHBhdGggZmlsbD0iIzM0QThVMyIgZD0iTTI0IDQ4YzYuNDggMCAxMS45My0yLjEzIDE1Ljg5LTUuODFsLTcuNzMtNmMtMi4xNSAxLjQ1LTQuOTIgMi4zLTguMTYgMi4zLTYuMjYgMC0xMS41Ny00LjIyLTEzLjQ3LTkuOTFsLTcuOTggNi4xOUM2LjUxIDQyLjYyIDE0LjYyIDQ4IDI0IDQ4eiIvPjwvc3ZnPg==',
             facebook: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiMxODc3RjIiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzMyIDI1NmgtNDV2MTgzaC03NlYyNTZoLTMydi02NGgzMnYtNDNjMC01OSAzNi05MiA5MC05MiAyMyAwIDQ3IDQgNDcgNHY2MGgtMzFjLTI5IDAtMzQgMTQtMzQgMzN2NDJoNjRsLTExIDY0eiIvPjwvc3ZnPg==',
             line: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiMwMEMzMDAiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzgwIDIzMGMwLTY1LTUwLTExNi0xMjQtMTE2UzEyMiAxNjUgMTIyIDIzMGMwIDU4IDQwIDEwNiAxMDQgMTE0bC03IDMwYy0xIDMgMiA2IDYgNGw1OC0yNmM3IDEgMTUgMiAyMSAyIDc0IDAgMTI0LTUxIDEyNC0xMTR6Ii8+PC9zdmc+',
             audio: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiM5MzMzRUEiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjU2IDExMmMtNzAuNyAwLTEyOCA1Ny4zLTEyOCAxMjh2MTEyYzAgMjYuNSAyMS41IDQ4IDQ4IDQ4aDMyYzE3LjcgMCAzMi0xNC4zIDMyLTMyVjI1NmMwLTE3LjctMTQuMy0zMi0zMi0zMmgtMzJ2LTE2YzAtNDQuMiAzNS44LTgwIDgwLTgwczgwIDM1LjggODAgODB2MTZoLTMyYy0xNy43IDAtMzIgMTQuMy0zMiAzMnYxMTJjMCAxNy43IDE0LjMgMzIgMzIgMzJoMzJjMjYuNSAwIDQ4LTIxLjUgNDgtNDhWMjQwYzAtNzAuNy01Ny4zLTEyOC0xMjgtMTI4eiIvPjwvc3ZnPg==',
             gform: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiM3MjQ4QjkiLz48cmVjdCB4PSIxNTYiIHk9IjE0NiIgd2lkdGg9IjIwMCIgaGVpZ2h0PSI0MCIgcng9IjEwIiBmaWxsPSIjZmZmZmZmIi8+PHJlY3QgeD0iMTU2IiB5PSIyMzYiIHdpZHRoPSIyMDAiIGhlaWdodD0iNDAiIHJ4PSIxMCIgZmlsbD0iI2ZmZmZmZiIvPjxyZWN0IHg9IjE1NiIgeT0iMzI2IiB3aWR0aD0iMTMwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNmZmZmZmYiLz48Y2lyY2xlIGN4PSIxMDYiIGN5PSIxNjYiIHI9IjIwIiBmaWxsPSIjZmZmZmZmIi8+PGNpcmNsZSBjeD0iMTA2IiBjeT0iMjU2IiByPSIyMCIgZmlsbD0iI2ZmZmZmZiIvPjxjaXJjbGUgY3g9IjEwNiIgY3k9IjM0NiIgcj0iMjAiIGZpbGw9IiNmZmZmZmYiLz48L3N2Zz4=',
             gmap: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiNFQTQzMzUiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjU2IDQ4Yy03OS41IDAtMTQ0IDY0LjUtMTQ0IDE0NCAwIDEwOS4xIDE0NCAyNzIgMTQ0IDI3MnMxNDQtMTYyLjkgMTQ0LTI3MmMwLTc5LjUtNjQuNS0xNDQtMTQ0LTE0NHptMCAyMTZjLTM5LjggMC03Mi0zMi4yLTcyLTcyczMyLjItNzIgNzItNzIgNzIgMzIuMiA3MiA3Mi0zMi4yIDcyLTcyIDcyeiIvPjwvc3ZnPg==',
-            // Original AppSheet Icon (Mobile phone)
+            // รูป AppSheet คลาสสิก
             appsheet: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzODQgNTEyIj48cGF0aCBmaWxsPSIjMUE3M0U4IiBkPSJNMCIDY0QzAgMjguNyAyOC43IDAgNjQgMGgyNTZjMzUuMyAwIDY0IDI4LjcgNjQgNjR2Mzg0YzAgMzUuMy0yOC43IDY0LTY0IDY0SDY0Yy0zNS4zIDAtNjQtMjguNy02NC02NFY2NHptMTI4IDQ0OGMwdTkgLjQgOCAxOCA4czE4LTguMSAxOC0xOGMwLTkuOS04LTE4LTE4LTE4cy0xOCA4LjEtMTggMTh6TTMyIDY0djM4NGgyNTZWNjRIMzJ6Ii8+PC9zdmc+',
-            // Original Apps Script Icon (Code symbol)
+            // รูป Apps Script คลาสสิก
             appscript: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NDAgNTEyIj48cGF0aCBmaWxsPSIjMEY5RDU4IiBkPSJNMjc4LjYgMjU2bDE2OC4yLTExMi4xYzQuOC0zLjIgNC44LTEwLjIgMC0xMy40bC0yNC0xNiBjLTQuOC0zLjItMTEuMi0zLjItMTYgMGwtMTkyIDEyOGMtNC44IDMuMi00LjggMTAuMiAwIDEzLjRsMTkyIDEyOGM0LjggMy4yIDExLjIgMy4yIDE2IDBsMjQtMTYgYzQuOC0zLjIgNC44LTEwLjIgMC0xMy40TDI3OC42IDI1NnptODEuNCIDBsLTE2OC4yIDExMi4xYy00LjggMy4yLTQuOCAxMC4yIDAgMTMuNGwyNCAxNiBjNC44IDMuMiAxMS4yIDMuMiAxNiAwbDE5Mi0xMjhjNC44LTMuMiA0LjgtMTAuMiAwLTEzLjRsLTE5Mi0xMjhjLTQuOC0zLjItMTEuMi0zLjItMTYgMGwtMjQgMTYgYy00LjggMy4yLTQuOCAxMC4yIDAgMTMuNEwzNjAgMjU2eiIvPjwvc3ZnPg=='
         };
 
         document.addEventListener('DOMContentLoaded', function() {
-            // สถิติ
+            // ดึงข้อมูลตัวนับจำนวนผู้ใช้
             fetch('https://api.counterapi.dev/v1/krukan_qr_app_v1/visits/up')
                 .then(response => response.json())
                 .then(data => {
@@ -241,7 +241,7 @@
                     document.getElementById('visitor-count').innerText = "-";
                 });
 
-            // อัปโหลดโลโก้เอง
+            // ตรวจสอบการเลือกรูปภาพโลโก้ของคุณครูเอง
             const customInput = document.getElementById('custom-icon');
             if(customInput) {
                 customInput.addEventListener('change', function(e) {
@@ -275,6 +275,7 @@
             }
         }
 
+        // ฟังก์ชันระบบย่อลิงก์อัจฉริยะ (สลับเอา TinyURL ขึ้นเป็นแกนหลักเพื่อป้องกันหน้าต่างคั่นโฆษณา/เตือนภัย Google Workspace)
         async function shortenLink() {
             let url = document.getElementById('qr-text').value.trim();
             if (!url) return alert("กรุณาใส่ลิงก์ก่อนครับ");
@@ -287,6 +288,7 @@
             
             let shortUrl = null;
 
+            // ฟังก์ชันตั้งเวลาทำงานสูงสุดป้องกันเว็บหมุนค้าง
             const fetchWithTimeout = async (resource, options = {}) => {
                 const { timeout = 3500 } = options;
                 const controller = new AbortController();
@@ -301,6 +303,38 @@
                 }
             };
 
+            // แผนที่ 1: ใช้ TinyURL (รับประกันยิงตรง 100% ไม่มีหน้าต่างคั่นเตือนความปลอดภัย Google Forms)
+            const tryTinyUrl = async () => {
+                const apiEndpoint = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`;
+                // รายการบริการ Proxy ข้ามการบล็อก (บาสพาส CORS)
+                const proxies = [
+                    `https://api.allorigins.win/get?url=${encodeURIComponent(apiEndpoint)}`,
+                    `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(apiEndpoint)}`,
+                    `https://corsproxy.io/?${encodeURIComponent(apiEndpoint)}`
+                ];
+                
+                for (let proxy of proxies) {
+                    try {
+                        const res = await fetchWithTimeout(proxy);
+                        if (proxy.includes('allorigins')) {
+                            const data = await res.json();
+                            if (data.contents && data.contents.match(/^https?:\/\//i)) {
+                                return data.contents.trim();
+                            }
+                        } else {
+                            const text = await res.text();
+                            if (text && text.match(/^https?:\/\//i)) {
+                                return text.trim();
+                            }
+                        }
+                    } catch (e) {
+                        console.warn("Proxy failed, trying next...", e);
+                    }
+                }
+                throw new Error("All proxies failed for TinyURL");
+            };
+
+            // แผนที่ 2: ใช้ is.gd เป็นตัวสำรองฉุกเฉิน (มีระบบ JSONP ในตัว)
             const tryIsGd = () => new Promise((resolve, reject) => {
                 const cb = 'isgdCallback_' + Math.round(100000 * Math.random());
                 const timer = setTimeout(() => { delete window[cb]; reject(); }, 3500);
@@ -311,19 +345,16 @@
                 document.body.appendChild(s);
             });
 
-            const tryTinyUrl = async () => {
-                const api = `https://tinyurl.com/api-create.php?url=${encodeURIComponent(url)}`;
-                const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(api)}`;
-                const res = await fetchWithTimeout(proxy);
-                const d = await res.json();
-                if (d.contents && d.contents.startsWith('http')) return d.contents;
-                throw new Error();
-            };
-
+            // เรียกทำงานโดยเน้น TinyURL ก่อนเพื่อการเข้าถึงแบบยิงตรง (No interstitial warning)
             try {
-                shortUrl = await tryIsGd();
+                shortUrl = await tryTinyUrl();
             } catch (e) {
-                try { shortUrl = await tryTinyUrl(); } catch (e2) {}
+                console.log("TinyURL ล้มเหลว สลับใช้ตัวสำรอง is.gd...");
+                try { 
+                    shortUrl = await tryIsGd(); 
+                } catch (e2) {
+                    console.log("ทุกระบบปิดปรับปรุง");
+                }
             }
 
             btn.disabled = false;
@@ -335,7 +366,7 @@
                 document.getElementById('qr-text').value = shortUrl; 
                 generateQRCode();
             } else {
-                alert("ระบบย่อลิงก์ขัดข้องชั่วคราว แต่คุณสามารถใช้ลิงก์เดิมสร้าง QR Code ได้เลยครับ");
+                alert("ระบบย่อลิงก์ชั่วคราวติดขัด คุณครูสามารถใช้ลิงก์ยาวสร้างคิวอาร์โค้ดได้เลยนะครับ");
             }
         }
 
@@ -391,7 +422,7 @@
             const qrColor = document.getElementById('qr-color').value;
             const textTitle = document.getElementById('qr-title').value.trim();
             
-            // Force load font K2D
+            // รอโหลดฟอนต์ K2D ให้เรียบร้อย
             try { await document.fonts.load('600 16px "K2D"'); } catch(e) {}
             await document.fonts.ready;
             
@@ -426,7 +457,7 @@
                     ctx.fill();
                     ctx.drawImage(img, x, y, logoSizeValue, logoSizeValue);
                 } catch (e) {
-                    console.error("Image draw error:", e);
+                    console.error("การโหลดรูปภาพตรงกลางขัดข้อง:", e);
                 }
             }
 
