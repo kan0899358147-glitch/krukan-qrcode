@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Generator - ครูกัญ</title>
-    <!-- โหลด Tailwind CSS และไลบรารีสร้าง QR Code -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -211,7 +210,7 @@
         </div>
     </div>
 
-    <!-- Script เบื้องหลัง -->
+    <!-- Script เบื้องหลัง (ทำงานแบบหน้าเว็บเดี่ยวบน GitHub ได้สมบูรณ์) -->
     <script>
         window.addEventListener('error', function(e) { e.preventDefault(); });
         window.addEventListener('unhandledrejection', function(e) { e.preventDefault(); });
@@ -312,6 +311,7 @@
             return cleaned;
         }
 
+        // ระบบย่อลิงก์แบบทำงานบนหน้าเว็บโดยตรง (รองรับ GitHub Pages 100%)
         async function shortenLink() {
             try {
                 let rawUrl = document.getElementById('qr-text').value.trim();
@@ -326,36 +326,54 @@
                 btn.disabled = true;
                 textSpan.innerHTML = '<i class="fas fa-spinner loading-spin"></i>';
 
-                if (typeof google !== 'undefined' && google.script && google.script.run) {
-                    google.script.run
-                        .withSuccessHandler(function(shortUrl) {
-                            btn.disabled = false;
-                            textSpan.innerText = "ย่อลิงก์";
-                            
-                            if (shortUrl) {
-                                document.getElementById('short-url-result').value = shortUrl;
-                                document.getElementById('short-link-container').classList.remove('hidden');
-                            } else {
-                                alert("ระบบย่อลิงก์เกิดข้อขัดข้องชั่วคราว แต่ระบบจะสร้าง QR Code จากลิงก์ยาวของคุณให้ครับ");
-                            }
-                            generateQRCode();
-                        })
-                        .withFailureHandler(function(error) {
-                            btn.disabled = false;
-                            textSpan.innerText = "ย่อลิงก์";
-                            alert("เกิดข้อผิดพลาดในการรันระบบย่อลิงก์ โปรดสร้าง QR Code จากลิงก์ตรงครับ");
-                            generateQRCode();
-                        })
-                        .getShortUrl(url);
-                } else {
-                     setTimeout(() => {
-                         btn.disabled = false;
-                         textSpan.innerText = "ย่อลิงก์";
-                         alert("การย่อลิงก์ทำงานได้เมื่อเปิดผ่านลิงก์ Web App ของ Google Apps Script เท่านั้นครับ");
-                         generateQRCode();
-                     }, 1000);
+                let shortUrl = null;
+
+                // 1. ลองใช้ spoo.me แบบยิงตรง
+                try {
+                    const resSpoo = await fetch('https://spoo.me/', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
+                        body: 'url=' + encodeURIComponent(url)
+                    });
+                    if (resSpoo.ok) {
+                        const dataSpoo = await resSpoo.json();
+                        if (dataSpoo && dataSpoo.short_url) shortUrl = dataSpoo.short_url;
+                    }
+                } catch(e) {}
+
+                // 2. สำรองด้วย clck.ru
+                if (!shortUrl) {
+                    try {
+                        const resClck = await fetch('https://clck.ru/--?url=' + encodeURIComponent(url));
+                        if (resClck.ok) {
+                            const textClck = await resClck.text();
+                            if (textClck && textClck.startsWith('http')) shortUrl = textClck.trim();
+                        }
+                    } catch(e) {}
                 }
 
+                // 3. สำรองด้วย is.gd ผ่าน Proxy
+                if (!shortUrl) {
+                    try {
+                        const resIsGd = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://is.gd/create.php?format=simple&url=' + encodeURIComponent(url)));
+                        if (resIsGd.ok) {
+                            const textIsGd = await resIsGd.text();
+                            if (textIsGd && textIsGd.startsWith('http')) shortUrl = textIsGd.trim();
+                        }
+                    } catch(e) {}
+                }
+
+                btn.disabled = false;
+                textSpan.innerText = "ย่อลิงก์";
+
+                if (shortUrl) {
+                    document.getElementById('short-url-result').value = shortUrl;
+                    document.getElementById('short-link-container').classList.remove('hidden');
+                } else {
+                    alert("ระบบย่อลิงก์เกิดข้อขัดข้องชั่วคราว แต่ระบบจะสร้าง QR Code จากลิงก์ยาวของคุณให้ครับ");
+                }
+                
+                generateQRCode(); 
             } catch(globalErr) {
                 const btn = document.getElementById('shorten-btn');
                 const textSpan = document.getElementById('shorten-text');
