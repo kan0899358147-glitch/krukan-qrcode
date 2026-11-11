@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Code Generator - ครูกัญ</title>
+    <!-- โหลด Tailwind CSS และไลบรารีสร้าง QR Code -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -47,13 +48,23 @@
             <div class="space-y-6">
                 <div>
                     <label class="block text-sm font-bold text-gray-700 mb-2 uppercase">ลิงก์ต้นทาง (URL)</label>
+                    <input type="text" id="qr-text" placeholder="https://www.example.com" 
+                        class="w-full px-5 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all text-gray-700">
+                </div>
+
+                <!-- ช่องตั้งชื่อลิงก์เอง (Custom Alias) และปุ่มย่อลิงก์ -->
+                <div>
+                    <label class="block text-sm font-bold text-indigo-600 mb-2 uppercase">
+                        ตั้งชื่อลิงก์สั้นเอง <span class="text-gray-400 font-normal text-xs">(ภาษาอังกฤษ/ตัวเลข 5 ตัวขึ้นไป - เว้นว่างได้)</span>
+                    </label>
                     <div class="flex gap-2">
-                        <input type="text" id="qr-text" placeholder="https://www.example.com" 
-                            class="flex-1 px-5 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-blue-100 focus:border-blue-500 outline-none transition-all text-gray-700">
-                        <button type="button" onclick="shortenLink()" id="shorten-btn" class="bg-indigo-500 hover:bg-indigo-600 text-white px-5 rounded-2xl font-bold shadow-md transition-all whitespace-nowrap">
-                            <span id="shorten-text">ย่อลิงก์</span>
+                        <input type="text" id="custom-alias" placeholder="เช่น krukan2569, sheet_m1" 
+                            class="flex-1 px-5 py-4 border-2 border-indigo-100 bg-indigo-50/30 rounded-2xl focus:ring-4 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all text-gray-700">
+                        <button type="button" onclick="shortenLink()" id="shorten-btn" class="bg-indigo-500 hover:bg-indigo-600 text-white px-6 rounded-2xl font-bold shadow-md transition-all whitespace-nowrap">
+                            <span id="shorten-text"><i class="fas fa-magic mr-1"></i> ย่อลิงก์</span>
                         </button>
                     </div>
+                    <p id="alias-error" class="text-red-500 text-xs mt-2 hidden"></p>
                 </div>
 
                 <!-- ช่องแสดงลิงก์ที่ย่อแล้ว -->
@@ -210,7 +221,7 @@
         </div>
     </div>
 
-    <!-- Script เบื้องหลัง (ทำงานแบบหน้าเว็บเดี่ยวบน GitHub ได้สมบูรณ์) -->
+    <!-- Script เบื้องหลัง -->
     <script>
         window.addEventListener('error', function(e) { e.preventDefault(); });
         window.addEventListener('unhandledrejection', function(e) { e.preventDefault(); });
@@ -229,7 +240,7 @@
             gform: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiM3MjQ4QjkiLz48cmVjdCB4PSIxNTYiIHl9IjE0NiIgd2lkdGg9IjIwMCIgaGVpZ2h0PSI0MCIgcng9IjEwIiBmaWxsPSIjZmZmZmZmIi8+PHJlY3QgeD0iMTU2IiB5PSIyMzYiIHdpZHRoPSIyMDAiIGhlaWdodD0iNDAiIHJ4PSIxMCIgZmlsbD0iI2ZmZmZmZiIvPjxyZWN0IHg9IjE1NiIgeT0iMzI2IiB3aWR0aD0iMTMwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNmZmZmZmYiLz48Y2lyY2xlIGN4PSIxMDYiIGN5PSIxNjYiIHI9IjIwIiBmaWxsPSIjZmZmZmZmIi8+PGNpcmNsZSBjeD0iMTA2IiBjeT0iMjU2IiByPSIyMCIgZmlsbD0iI2ZmZmZmZiIvPjxjaXJjbGUgY3g9IjEwNiIgY3k9IjM0NiIgcj0iMjAiIGZpbGw9IiNmZmZmZmYiLz48L3N2Zz4=',
             gmap: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiNFQTQzMzUiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjU2IDQ4Yy03OS41IDAtMTQ0IDY0LjUtMTQ0IDE0NCAwIDEwOS4xIDE0NCAyNzIgMTQ0IDI3MnMxNDQtMTYyLjkgMTQ0LTI3MmMwLTc5LjUtNjQuNS0xNDQtMTQ0LTE0NHptMCAyMTZjLTM5LjggMC03Mi0zMi4yLTcyLTcyczMyLjItNzIgNzItNzIgNzIgMzIuMiA3MiA3Mi0zMi4yIDcyLTcyIDcyeiIvPjwvc3ZnPg==',
             appsheet: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzODQiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgMzg0IDUxMiI+PHBhdGggZmlsbD0iIzNCODJGNiIgZD0iTTE2IDY0QzE2IDI4LjcgNDQuNyAwIDgwIDBoMjI0YzM1LjMgMCA2NCAyOC43IDY0IDY0djM4NGMwIDM1LjMtMjguNyA2NC02NCA2NEg4MGMtMzUuMyAwLTY0LTI4LjctNjQtNjRWNjR6bTIyNCA0MDBhMjQgMjQgMCAxIDAgLTQ4IDAgMjQgMjQgMCAxIDAgNDggMHpNMzA0IDY0SDgwdjMyMGgyMjRWNjR6Ii8+PC9zdmc+',
-            appscript: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNjQwIDUxMiI+PHBhdGggZmlsbD0iIzEwQjk4MSIgZD0iTTM5Mi44IDEuMmMtMTctNC45LTM0LjcgNS0zOS42IDIybC0xMjggNDQ4Yy00LjkgMTcgNSAzNC43IDIyIDM5LjZzMzQuNy01IDM5LjYtMjJsMTI4LTQ0OGM0LjktMTctNS0zNC43LTIyLTM5LjZzNmptTjkwLjYgMTIwLjFjLTEyLjUtMTIuNS0xMi41LTMyLjggMCA0NS4zTDU2Mi43IDI1NmwtODkuNCA4OS40Yy0xMi41IDEyLjUtMTIuNSAzMi44IDAgNDUuM3MzMy44IDEyLjUgNDUuMyAwbDExMi0xMTJjMTIuNS0xMi41IDEyLjUtMzIuOCAwLTQ1LjNsLTExMi0xMTJjLTEyLjUtMTIuNS0zMi44LTEyLjUtNDUuMyAwem0tMzA2LjcgMGMtMTIuNS0xMi41LTMyLjgtMTIuNS00NS4zIDBsLTExMiAxMTJjLTEyLjUtMTIuNS0xMi41IDMyLjggMCA0NS4zbDExMiAxMTJjMTIuNSAxMi41IDMyLjggMTIuNSA0NS4zIDBzMTIuNS0zMi44IDAtNDUuM0w3Ny4zIDI1Nmw4OS40LTg5LjRjMTIuNS0xMi41IDE2Mi41LTMyLjggMCA0NS43eiIvPjwvc3Zn+'
+            appscript: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNjQwIDUxMiI+PHBhdGggZmlsbD0iIzEwQjk4MSIgZD0iTTM5Mi44IDEuMmMtMTctNC45LTM0LjcgNS0zOS42IDIybC0xMjggNDQ4Yy00LjkgMTcgNSAzNC43IDIyIDM5LjZzMzQuNy01IDM5LjYtMjJsMTI4LTQ0OGM0LjktMTctNS0zNC43LTIyLTM5LjZ6bTgwLjYgMTIwLjFjLTEyLjUtMTIuNS0xMi41LTMyLjggMCA0NS4zTDU2Mi43IDI1NmwtODkuNCA4OS40Yy0xMi41IDEyLjUtMTIuNSAzMi44IDAgNDUuM3MzMy44IDEyLjUgNDUuMyAwbDExMi0xMTJjMTIuNS0xMi41IDEyLjUtMzIuOCAwLTQ1LjNsLTExMi0xMTJjLTEyLjUtMTIuNS0zMi44LTEyLjUtNDUuMyAwem0tMzA2LjcgMGMtMTIuNS0xMi41LTMyLjgtMTIuNS00NS4zIDBsLTExMiAxMTJjLTEyLjUtMTIuNS0xMi41IDMyLjggMCA0NS4zbDExMiAxMTJjMTIuNSAxMi41IDMyLjggMTIuNSA0NS4zIDBzMTIuNS0zMi44IDAtNDUuM0w3Ny4zIDI1Nmw4OS40LTg5LjRjMTIuNS0xMi41IDE2Mi41LTMyLjggMCA0NS43eiIvPjwvc3Zn+'
         };
 
         window.onload = async function() {
@@ -248,12 +259,14 @@
                         }
                     });
                 }
-                
+
+                // ถ้ายุ่งกับลิงก์ต้นทาง ให้ซ่อนช่องย่อลิงก์
                 const qrTextInput = document.getElementById('qr-text');
                 if (qrTextInput) {
                     qrTextInput.addEventListener('input', function() {
                         document.getElementById('short-link-container').classList.add('hidden');
                         document.getElementById('short-url-result').value = '';
+                        document.getElementById('alias-error').classList.add('hidden');
                     });
                 }
             } catch(e) {}
@@ -311,11 +324,39 @@
             return cleaned;
         }
 
-        // ระบบย่อลิงก์แบบทำงานบนหน้าเว็บโดยตรง (รองรับ GitHub Pages 100%)
+        function showMsg(msg) {
+            const errEl = document.getElementById('alias-error');
+            if (errEl) {
+                errEl.innerText = msg;
+                errEl.classList.remove('hidden');
+            }
+        }
+
+        // ระบบย่อลิงก์พร้อมตั้งชื่อเอง (รองรับทั้ง Google Apps Script และ GitHub Pages)
         async function shortenLink() {
             try {
+                const errEl = document.getElementById('alias-error');
+                if (errEl) errEl.classList.add('hidden');
+
                 let rawUrl = document.getElementById('qr-text').value.trim();
-                if (!rawUrl) return alert("กรุณาใส่ลิงก์ก่อนครับ");
+                let customAlias = document.getElementById('custom-alias').value.trim();
+                
+                if (!rawUrl) {
+                    showMsg("⚠️ กรุณาใส่ลิงก์ต้นทางก่อนครับ");
+                    return;
+                }
+
+                // ตรวจสอบเงื่อนไขการตั้งชื่อลิงก์
+                if (customAlias) {
+                    if (!/^[a-zA-Z0-9_-]+$/.test(customAlias)) {
+                        showMsg("⚠️ ชื่อลิงก์ใช้ได้เฉพาะภาษาอังกฤษ ตัวเลข ขีดกลาง(-) และขีดล่าง(_) เท่านั้นครับ");
+                        return;
+                    }
+                    if (customAlias.length < 5) {
+                        showMsg("⚠️ ชื่อลิงก์ต้องมีความยาวอย่างน้อย 5 ตัวอักษรครับ");
+                        return;
+                    }
+                }
 
                 let url = cleanDirtyUrl(rawUrl);
                 if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
@@ -326,59 +367,103 @@
                 btn.disabled = true;
                 textSpan.innerHTML = '<i class="fas fa-spinner loading-spin"></i>';
 
-                let shortUrl = null;
+                // กรณีที่ 1: รันบน Google Apps Script
+                if (typeof google !== 'undefined' && google.script && google.script.run) {
+                    google.script.run
+                        .withSuccessHandler(function(res) {
+                            btn.disabled = false;
+                            textSpan.innerHTML = '<i class="fas fa-magic mr-1"></i> ย่อลิงก์';
+                            
+                            if (res && res.shortUrl) {
+                                document.getElementById('short-url-result').value = res.shortUrl;
+                                document.getElementById('short-link-container').classList.remove('hidden');
+                            } else if (res && res.error) {
+                                showMsg("⚠️ " + res.error);
+                            } else {
+                                showMsg("⚠️ ระบบย่อลิงก์ขัดข้อง ระบบจะสร้าง QR Code จากลิงก์เต็มแทนครับ");
+                            }
+                            generateQRCode();
+                        })
+                        .withFailureHandler(function() {
+                            btn.disabled = false;
+                            textSpan.innerHTML = '<i class="fas fa-magic mr-1"></i> ย่อลิงก์';
+                            showMsg("⚠️ เกิดข้อผิดพลาดในการย่อลิงก์ ระบบจะใช้ลิงก์เต็มแทนครับ");
+                            generateQRCode();
+                        })
+                        .getShortUrl(url, customAlias);
+                } 
+                // กรณีที่ 2: รันบน GitHub Pages หรือเปิดไฟล์ HTML โดยตรง
+                else {
+                    let shortUrl = null;
+                    let errorReason = null;
 
-                // 1. ลองใช้ spoo.me แบบยิงตรง
-                try {
-                    const resSpoo = await fetch('https://spoo.me/', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
-                        body: 'url=' + encodeURIComponent(url)
-                    });
-                    if (resSpoo.ok) {
-                        const dataSpoo = await resSpoo.json();
-                        if (dataSpoo && dataSpoo.short_url) shortUrl = dataSpoo.short_url;
-                    }
-                } catch(e) {}
-
-                // 2. สำรองด้วย clck.ru
-                if (!shortUrl) {
+                    // 1. ลองใช้ is.gd ผ่าน Proxy (รองรับการตั้งชื่อลิงก์ดีที่สุด)
                     try {
-                        const resClck = await fetch('https://clck.ru/--?url=' + encodeURIComponent(url));
-                        if (resClck.ok) {
-                            const textClck = await resClck.text();
-                            if (textClck && textClck.startsWith('http')) shortUrl = textClck.trim();
-                        }
-                    } catch(e) {}
-                }
-
-                // 3. สำรองด้วย is.gd ผ่าน Proxy
-                if (!shortUrl) {
-                    try {
-                        const resIsGd = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://is.gd/create.php?format=simple&url=' + encodeURIComponent(url)));
+                        let isGdApi = `https://is.gd/create.php?format=json&url=${encodeURIComponent(url)}`;
+                        if (customAlias) isGdApi += `&shorturl=${encodeURIComponent(customAlias)}`;
+                        
+                        const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(isGdApi);
+                        const resIsGd = await fetch(proxyUrl);
                         if (resIsGd.ok) {
-                            const textIsGd = await resIsGd.text();
-                            if (textIsGd && textIsGd.startsWith('http')) shortUrl = textIsGd.trim();
+                            const dataIsGd = await resIsGd.json();
+                            if (dataIsGd.shorturl) {
+                                shortUrl = dataIsGd.shorturl;
+                            } else if (dataIsGd.errormessage) {
+                                errorReason = "ชื่อลิงก์ '" + customAlias + "' มีคนใช้แล้ว หรือไม่สามารถใช้ได้ครับ กรุณาเปลี่ยนชื่อใหม่";
+                            }
                         }
-                    } catch(e) {}
+                    } catch (e) {}
+
+                    // 2. ลองใช้ spoo.me หากยังไม่ได้ลิงก์และไม่ได้ติดปัญหาชื่อซ้ำ
+                    if (!shortUrl && !errorReason) {
+                        try {
+                            let bodyData = 'url=' + encodeURIComponent(url);
+                            if (customAlias) bodyData += '&alias=' + encodeURIComponent(customAlias);
+
+                            const resSpoo = await fetch('https://spoo.me/', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
+                                body: bodyData
+                            });
+                            const dataSpoo = await resSpoo.json();
+                            if (resSpoo.ok && dataSpoo.short_url) {
+                                shortUrl = dataSpoo.short_url;
+                            } else if (customAlias) {
+                                errorReason = "ชื่อลิงก์ '" + customAlias + "' มีคนใช้ไปแล้วครับ กรุณาตั้งชื่อใหม่";
+                            }
+                        } catch (e) {}
+                    }
+
+                    // 3. หากไม่ได้ตั้งชื่อเอง แล้วระบบข้างต้นล่ม ให้ใช้ clck.ru สำรอง
+                    if (!shortUrl && !customAlias && !errorReason) {
+                        try {
+                            const resClck = await fetch('https://clck.ru/--?url=' + encodeURIComponent(url));
+                            if (resClck.ok) {
+                                const textClck = await resClck.text();
+                                if (textClck && textClck.startsWith('http')) shortUrl = textClck.trim();
+                            }
+                        } catch (e) {}
+                    }
+
+                    btn.disabled = false;
+                    textSpan.innerHTML = '<i class="fas fa-magic mr-1"></i> ย่อลิงก์';
+
+                    if (shortUrl) {
+                        document.getElementById('short-url-result').value = shortUrl;
+                        document.getElementById('short-link-container').classList.remove('hidden');
+                    } else if (errorReason) {
+                        showMsg("⚠️ " + errorReason);
+                    } else {
+                        showMsg("⚠️ ระบบย่อลิงก์ขัดข้องชั่วคราว ระบบจะสร้าง QR Code จากลิงก์เต็มแทนครับ");
+                    }
+                    generateQRCode();
                 }
 
-                btn.disabled = false;
-                textSpan.innerText = "ย่อลิงก์";
-
-                if (shortUrl) {
-                    document.getElementById('short-url-result').value = shortUrl;
-                    document.getElementById('short-link-container').classList.remove('hidden');
-                } else {
-                    alert("ระบบย่อลิงก์เกิดข้อขัดข้องชั่วคราว แต่ระบบจะสร้าง QR Code จากลิงก์ยาวของคุณให้ครับ");
-                }
-                
-                generateQRCode(); 
             } catch(globalErr) {
                 const btn = document.getElementById('shorten-btn');
                 const textSpan = document.getElementById('shorten-text');
                 if(btn) btn.disabled = false;
-                if(textSpan) textSpan.innerText = "ย่อลิงก์";
+                if(textSpan) textSpan.innerHTML = '<i class="fas fa-magic mr-1"></i> ย่อลิงก์';
                 generateQRCode();
             }
         }
