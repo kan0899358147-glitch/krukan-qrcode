@@ -159,11 +159,11 @@
                             <span class="text-[10px] mt-1 font-medium">Maps</span>
                         </button>
                         <button type="button" onclick="selectIcon('appsheet')" class="icon-option flex flex-col items-center p-3 rounded-2xl bg-gray-50 border-2 border-gray-100" data-icon="appsheet">
-                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzODQiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgMzg0IDUxMiI+PHBhdGggZmlsbD0iIzNCODJGNiIgZD0iTTE2IDY0QzE2IDI4LjcgNDQuNyAwIDgwIDBoMjI0YzM1LjMgMCA2NCAyOC43IDY0IDY0djM4NGMwIDM1LjMtMjguNyA2NC02NCA2NEg4MGMtMzUuMyAwLTY0LTI4LjctNjQtNjRWNjR6bTIyNCA0MDBhMjQgMjQgMCAxIDAgLTQ4IDAgMjQgMjQgMCAxIDAgNDggMHpNMzA0IDY0SDgwdjMyMGgyMjRWNjR6Ii8+PC9zdmc+" alt="AppSheet" class="w-6 h-6 object-contain mb-1 rounded-sm">
+                            <i class="fas fa-mobile-alt text-blue-500 text-2xl"></i>
                             <span class="text-[10px] mt-1 font-medium text-center leading-tight">AppSheet</span>
                         </button>
                         <button type="button" onclick="selectIcon('appscript')" class="icon-option flex flex-col items-center p-3 rounded-2xl bg-gray-50 border-2 border-gray-100" data-icon="appscript">
-                            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNjQwIDUxMiI+PHBhdGggZmlsbD0iIzEwQjk4MSIgZD0iTTM5Mi44IDEuMmMtMTctNC45LTM0LjcgNS0zOS42IDIybC0xMjggNDQ4Yy00LjkgMTcgNSAzNC43IDIyIDM5LjZzMzQuNy01IDM5LjYtMjJsMTI4LTQ0OGM0LjktMTctNS0zNC43LTIyLTM5LjZ6bTgwLjYgMTIwLjFjLTEyLjUtMTIuNS0xMi41LTMyLjggMCA0NS4zTDU2Mi43IDI1NmwtODkuNCA4OS40Yy0xMi41IDEyLjUtMTIuNSAzMi44IDAgNDUuM3MzMy44IDEyLjUgNDUuMyAwbDExMi0xMTJjMTIuNS0xMi41IDEyLjUtMzIuOCAwLTQ1LjNsLTExMi0xMTJjLTEyLjUtMTIuNS0zMi44LTEyLjUtNDUuMyAwem0tMzA2LjcgMGMtMTIuNS0xMi41LTMyLjgtMTIuNS00NS4zIDBsLTExMiAxMTJjLTEyLjUtMTIuNS0xMi41IDMyLjggMCA0NS4zbDExMiAxMTJjMTIuNSAxMi41IDMyLjggMTIuNSA0NS4zIDBzMTIuNS0zMi44IDAtNDUuM0w3Ny4zIDI1Nmw4OS40LTg5LjRjMTIuNS0xMi41IDE2Mi41LTMyLjggMCA0NS43eiIvPjwvc3Zn+" alt="Apps Script" class="w-6 h-6 object-contain mb-1 rounded-sm">
+                            <i class="fas fa-code text-emerald-500 text-2xl"></i>
                             <span class="text-[10px] mt-1 font-medium text-center leading-tight">AppsScript</span>
                         </button>
                     </div>
@@ -223,101 +223,106 @@
 
     <!-- Script เบื้องหลัง -->
     <script>
-        window.addEventListener('error', function(e) { e.preventDefault(); });
-        window.addEventListener('unhandledrejection', function(e) { e.preventDefault(); });
-
         let selectedIconType = 'none';
         let customIconBase64 = null;
 
+        // สร้าง SVG Data URI แบบปลอดภัย 100% ป้องกันปัญหา Base64 ขาดหาย
+        function createSvgIcon(bg, innerSvg) {
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><rect width="512" height="512" rx="110" fill="${bg}"/>${innerSvg}</svg>`;
+            return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+        }
+
         const officialLogos = {
-            website: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiMzQjgyRjYiLz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjE4MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjMwIi8+PGVsbGlwc2UgY3g9IjI1NiIgY3k9IjI1NiIgcng9IjgwIiByeT0iMTgwIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMzAiLz48cGF0aCBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS13aWR0aD0iMzAiIGQ9Ik03NiAyNTZoMzYwIE0xMjggMTUwaDI1NiBNMTI4IDM2MmgyNTYiLz48L3N2Zz4=',
-            pdf: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMDAiIGZpbGw9IiNlMzM2MjYiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMTAwIDE2MGg2MGMzMCAwIDUwIDE1IDUwIDQ1cy0yMCA0NS01MCA0NWgtMjB2NzBoLTQweiBtNDAgMzB2MzBoMTVjMTUgMCAxNS0zMCAwLTMweiBNMjQwIDE2MGg0MGMzMCAwIDUwIDE1IDUwIDUwdjIwYzAgMzUtMjAgNTAtNTAgNTBoLTQweiBtNDAgMzB2NjBoMTBjMTUgMCAyMC0xMCAyMC0yNXYtMTBjMC0xNS01LTI1LTIwLTI1eiBNMzcwIDE2MGg3MHYzMGgtMzB2MjBoMjV2MzBoLTI1djgwaC00MHoiLz48L3N2Zz4=',
-            youtube: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTc2IDUxMiI+PHJlY3Qgd2lkdGg9IjU3NiIgaGVpZ2h0PSI0MDAiIHk9Ijc2IiByeD0iOTAiIGZpbGw9IiNGRjAwMDAiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjMwIDE4MHYxNTJsMTQwLTc2eiIvPjwvc3ZnPg==',
-            google: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNDggNDgiPjxyZWN0IHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgcng9IjEwIiBmaWxsPSIjZmZmZmZmIi8+PHBhdGggZmlsbD0iI0VBNDMzNSIgZD0iTTI0IDkuNWMzLjU0IDAgNi43MSAxLjIyIDkuMjEgMy42bDYuODUtNi44NUMzNS45IDIuMzggMzAuNDcgMCAyNCAwIDE0LjYyIDAgNi41MSA1LjM4IDIuNTYgMTMuMjlsNy45OCA2LjE5QzEyLjQzIDEzLjcyIDE3Ljc0IDkuNSAyNCA5LjV6Ii8+PHBhdGggZmlsbD0iIzQyODVGNCIgZD0iTTQ2Ljk4IDI0LjU1YzAtMS41Ny0uMTUtMy4wOS0uMzgtNC41NUgyNHY5LjAyaDEyLjk0Yy0uNTggMi45Ni0yLjI2IDUuNDgtNC43OCA3LjE4bDcuNzMgNmM0LjUxLTQuMTggNy4wOS0xMC4zNiA3LjA5LTE3LjY1eiIvPjxwYXRoIGZpbGw9IiNGQkJDMDUiIGQ9Ik0xMC41MyAyOC41OWMtLjQ4LTEuNDUtLjc2LTIuOTktLjc2LTQuNTlzLjI3LTMuMTQuNzYtNC41OWwtNy45OC02LjE5Qy45MiAxNi40NiAwIDIwLjEyIDAgMjRzLjkyIDcuNTQgMi41NiAxMC43OGw3Ljk3LTYuMTl6Ii8+PHBhdGggZmlsbD0iIzM0QThVMyIgZD0iTTI0IDQ4YzYuNDggMCAxMS45My0yLjEzIDE1Ljg5LTUuODFsLTcuNzMtNmMtMi4xNSAxLjQ1LTQuOTIgMi4zLTguMTYgMi4zLTYuMjYgMC0xMS41Ny00LjIyLTEzLjQ3LTkuOTFsLTcuOTggNi4xOUM2LjUxIDQyLjYyIDE0LjYyIDQ4IDI0IDQ4eiIvPjwvc3ZnPg==',
-            facebook: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiMxODc3RjIiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzMyIDI1NmgtNDV2MTgzaC03NlYyNTZoLTMydi02NGgzMnYtNDNjMC01OSAzNi05MiA5MC05MiAyMyAwIDQ3IDQgNDcgNHY2MGgtMzFjLTI5IDAtMzQgMTQtMzQgMzN2NDJoNjRsLTExIDY0eiIvPjwvc3ZnPg==',
-            line: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiMwMEMzMDAiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMzgwIDIzMGMwLTY1LTUwLTExNi0xMjQtMTE2UzEyMiAxNjUgMTIyIDIzMGMwIDU4IDQwIDEwNiAxMDQgMTE0bC03IDMwYy0xIDMgMiA2IDYgNGw1OC0yNmM3IDEgMTUgMiAyMSAyIDc0IDAgMTI0LTUxIDEyNC0xMTR6Ii8+PC9zdmc+',
-            audio: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PGNpcmNsZSBjeD0iMjU2IiBjeT0iMjU2IiByPSIyNTYiIGZpbGw9IiM5MzMzRUEiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjU2IDExMmMtNzAuNyAwLTEyOCA1Ny4zLTEyOCAxMjh2MTEyYzAgMjYuNSAyMS41IDQ4IDQ4IDQ4aDMyYzE3LjcgMCAzMi0xNC4zIDMyLTMyVjI1NmMwLTE3LjctMTQuMy0zMi0zMi0zMmgtMzJ2LTE2YzAtNDQuMiAzNS44LTgwIDgwLTgwczgwIDM1LjggODAgODB2MTZoLTMyYy0xNy43IDAtMzIgMTQuMy0zMiAzMnYxMTJjMCAxNy43IDE0LjMgMzIgMzIgMzJoMzJjMjYuNSAwIDQ4LTIxLjUgNDgtNDhWMjQwYzAtNzAuNy01Ny4zLTEyOC0xMjgtMTI4eiIvPjwvc3ZnPg==',
-            gform: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiM3MjQ4QjkiLz48cmVjdCB4PSIxNTYiIHl9IjE0NiIgd2lkdGg9IjIwMCIgaGVpZ2h0PSI0MCIgcng9IjEwIiBmaWxsPSIjZmZmZmZmIi8+PHJlY3QgeD0iMTU2IiB5PSIyMzYiIHdpZHRoPSIyMDAiIGhlaWdodD0iNDAiIHJ4PSIxMCIgZmlsbD0iI2ZmZmZmZiIvPjxyZWN0IHg9IjE1NiIgeT0iMzI2IiB3aWR0aD0iMTMwIiBoZWlnaHQ9IjQwIiByeD0iMTAiIGZpbGw9IiNmZmZmZmYiLz48Y2lyY2xlIGN4PSIxMDYiIGN5PSIxNjYiIHI9IjIwIiBmaWxsPSIjZmZmZmZmIi8+PGNpcmNsZSBjeD0iMTA2IiBjeT0iMjU2IiByPSIyMCIgZmlsbD0iI2ZmZmZmZiIvPjxjaXJjbGUgY3g9IjEwNiIgY3k9IjM0NiIgcj0iMjAiIGZpbGw9IiNmZmZmZmYiLz48L3N2Zz4=',
-            gmap: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiI+PHJlY3Qgd2lkdGg9IjUxMiIgaGVpZ2h0PSI1MTIiIHJ4PSIxMTAiIGZpbGw9IiNFQTQzMzUiLz48cGF0aCBmaWxsPSIjZmZmZmZmIiBkPSJNMjU2IDQ4Yy03OS41IDAtMTQ0IDY0LjUtMTQ0IDE0NCAwIDEwOS4xIDE0NCAyNzIgMTQ0IDI3MnMxNDQtMTYyLjkgMTQ0LTI3MmMwLTc5LjUtNjQuNS0xNDQtMTQ0LTE0NHptMCAyMTZjLTM5LjggMC03Mi0zMi4yLTcyLTcyczMyLjItNzIgNzItNzIgNzIgMzIuMiA3MiA3Mi0zMi4yIDcyLTcyIDcyeiIvPjwvc3ZnPg==',
-            appsheet: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzODQiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgMzg0IDUxMiI+PHBhdGggZmlsbD0iIzNCODJGNiIgZD0iTTE2IDY0QzE2IDI4LjcgNDQuNyAwIDgwIDBoMjI0YzM1LjMgMCA2NCAyOC43IDY0IDY0djM4NGMwIDM1LjMtMjguNyA2NC02NCA2NEg4MGMtMzUuMyAwLTY0LTI4LjctNjQtNjRWNjR6bTIyNCA0MDBhMjQgMjQgMCAxIDAgLTQ4IDAgMjQgMjQgMCAxIDAgNDggMHpNMzA0IDY0SDgwdjMyMGgyMjRWNjR6Ii8+PC9zdmc+',
-            appscript: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NDAiIGhlaWdodD0iNTEyIiB2aWV3Qm94PSIwIDAgNjQwIDUxMiI+PHBhdGggZmlsbD0iIzEwQjk4MSIgZD0iTTM5Mi44IDEuMmMtMTctNC45LTM0LjcgNS0zOS42IDIybC0xMjggNDQ4Yy00LjkgMTcgNSAzNC43IDIyIDM5LjZzMzQuNy01IDM5LjYtMjJsMTI4LTQ0OGM0LjktMTctNS0zNC43LTIyLTM5LjZ6bTgwLjYgMTIwLjFjLTEyLjUtMTIuNS0xMi41LTMyLjggMCA0NS4zTDU2Mi43IDI1NmwtODkuNCA4OS40Yy0xMi41IDEyLjUtMTIuNSAzMi44IDAgNDUuM3MzMy44IDEyLjUgNDUuMyAwbDExMi0xMTJjMTIuNS0xMi41IDEyLjUtMzIuOCAwLTQ1LjNsLTExMi0xMTJjLTEyLjUtMTIuNS0zMi44LTEyLjUtNDUuMyAwem0tMzA2LjcgMGMtMTIuNS0xMi41LTMyLjgtMTIuNS00NS4zIDBsLTExMiAxMTJjLTEyLjUtMTIuNS0xMi41IDMyLjggMCA0NS4zbDExMiAxMTJjMTIuNSAxMi41IDMyLjggMTIuNSA0NS4zIDBzMTIuNS0zMi44IDAtNDUuM0w3Ny4zIDI1Nmw4OS40LTg5LjRjMTIuNS0xMi41IDE2Mi41LTMyLjggMCA0NS43eiIvPjwvc3Zn+'
+            website: createSvgIcon('#06b6d4', '<circle cx="256" cy="256" r="160" fill="none" stroke="#fff" stroke-width="28"/><ellipse cx="256" cy="256" rx="75" ry="160" fill="none" stroke="#fff" stroke-width="28"/><path stroke="#fff" stroke-width="28" d="M96 256h320M120 165h272M120 347h272"/>'),
+            pdf: createSvgIcon('#dc2626', '<text x="256" y="315" font-family="sans-serif" font-size="165" font-weight="900" fill="#fff" text-anchor="middle">PDF</text>'),
+            youtube: createSvgIcon('#ff0000', '<path fill="#fff" d="M205 166v180l155-90z"/>'),
+            google: createSvgIcon('#4285F4', '<path fill="#fff" d="M256 196v65h92c-12 42-48 70-92 70-58 0-105-47-105-105s47-105 105-105c26 0 50 10 68 26l48-48c-30-28-71-45-116-45-95 0-172 77-172 172s77 172 172 172c99 0 165-70 165-168 0-12-1-23-3-34H256z"/>'),
+            facebook: createSvgIcon('#1877F2', '<path fill="#fff" d="M326 266h-45v166h-68V266h-32v-58h32v-38c0-52 32-82 80-82 22 0 42 4 42 4v48h-26c-25 0-32 13-32 30v38h55l-10 58z"/>'),
+            line: createSvgIcon('#00C300', '<text x="256" y="305" font-family="sans-serif" font-size="145" font-weight="900" fill="#fff" text-anchor="middle">LINE</text>'),
+            audio: createSvgIcon('#9333ea', '<path fill="#fff" d="M256 120c-75 0-136 61-136 136v104c0 26 22 48 48 48h32c18 0 32-14 32-32v-80c0-18-14-32-32-32h-32v-8c0-48 40-88 88-88s88 40 88 88v8h-32c-18 0-32 14-32 32v80c0 18 14 32 32 32h32c26 0 48-22 48-48V256c0-75-61-136-136-136z"/>'),
+            gform: createSvgIcon('#7248B9', '<rect x="160" y="150" width="192" height="36" rx="10" fill="#fff"/><rect x="160" y="238" width="192" height="36" rx="10" fill="#fff"/><rect x="160" y="326" width="125" height="36" rx="10" fill="#fff"/><circle cx="112" cy="168" r="18" fill="#fff"/><circle cx="112" cy="256" r="18" fill="#fff"/><circle cx="112" cy="344" r="18" fill="#fff"/>'),
+            gmap: createSvgIcon('#EA4335', '<path fill="#fff" d="M256 96c-66 0-120 54-120 120 0 90 120 216 120 216s120-126 120-216c0-66-54-120-120-120zm0 165c-25 0-45-20-45-45s20-45 45-45 45 20 45 45-20 45-45 45z"/>'),
+            appsheet: createSvgIcon('#3B82F6', '<path fill="#fff" d="M160 96c-22 0-40 18-40 40v240c0 22 18 40 40 40h192c22 0 40-18 40-40V136c0-22-18-40-40-40H160zm96 285c-14 0-25-11-25-25s11-25 25-25 25 11 25 25-11 25-25 25zm80-65H176V140h160v176z"/>'),
+            appscript: createSvgIcon('#10B981', '<path fill="none" stroke="#fff" stroke-width="36" stroke-linecap="round" stroke-linejoin="round" d="M190 176l-80 80 80 80m132-160l80 80-80 80m-40-200l-52 240"/>')
         };
 
-        window.onload = async function() {
-            try {
-                const customInput = document.getElementById('custom-icon');
-                if(customInput) {
-                    customInput.addEventListener('change', function(e) {
-                        const file = e.target.files[0];
-                        if (file) {
-                            const reader = new FileReader();
-                            reader.onload = function(event) {
-                                customIconBase64 = event.target.result;
-                                selectIcon('custom');
-                            };
-                            reader.readAsDataURL(file);
-                        }
-                    });
-                }
+        window.addEventListener('DOMContentLoaded', function() {
+            const customInput = document.getElementById('custom-icon');
+            if (customInput) {
+                customInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            customIconBase64 = event.target.result;
+                            selectIcon('custom');
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
 
-                // ถ้ายุ่งกับลิงก์ต้นทาง ให้ซ่อนช่องย่อลิงก์
-                const qrTextInput = document.getElementById('qr-text');
-                if (qrTextInput) {
-                    qrTextInput.addEventListener('input', function() {
-                        document.getElementById('short-link-container').classList.add('hidden');
-                        document.getElementById('short-url-result').value = '';
-                        document.getElementById('alias-error').classList.add('hidden');
-                    });
-                }
-            } catch(e) {}
-        };
+            const qrTextInput = document.getElementById('qr-text');
+            if (qrTextInput) {
+                qrTextInput.addEventListener('input', function() {
+                    document.getElementById('short-link-container').classList.add('hidden');
+                    document.getElementById('short-url-result').value = '';
+                    const errEl = document.getElementById('alias-error');
+                    if (errEl) errEl.classList.add('hidden');
+                });
+            }
+        });
 
         function selectIcon(type) {
-            try {
-                selectedIconType = type;
-                document.querySelectorAll('.icon-option').forEach(btn => btn.classList.remove('active'));
-                
-                const customBtnUi = document.getElementById('custom-btn-ui');
-                if (customBtnUi) {
-                    customBtnUi.classList.remove('border-blue-500', 'bg-blue-50', 'text-blue-600', 'border-solid');
-                    customBtnUi.classList.add('border-dashed', 'border-gray-200', 'text-gray-500');
-                }
+            selectedIconType = type;
+            document.querySelectorAll('.icon-option').forEach(btn => btn.classList.remove('active'));
+            
+            const customBtnUi = document.getElementById('custom-btn-ui');
+            if (customBtnUi) {
+                customBtnUi.classList.remove('border-blue-500', 'bg-blue-50', 'text-blue-600', 'border-solid');
+                customBtnUi.classList.add('border-dashed', 'border-gray-200', 'text-gray-500');
+            }
 
-                if (type === 'custom') {
-                    if (customBtnUi) {
-                        customBtnUi.classList.remove('border-dashed', 'border-gray-200', 'text-gray-500');
-                        customBtnUi.classList.add('border-blue-500', 'bg-blue-50', 'text-blue-600', 'border-solid');
-                    }
-                } else if (type === 'none') {
-                    const btn = document.querySelector('[data-icon="none"]');
-                    if(btn) btn.classList.add('active');
-                } else {
-                    const btn = document.querySelector(`[data-icon="${type}"]`);
-                    if (btn) btn.classList.add('active');
+            if (type === 'custom') {
+                if (customBtnUi) {
+                    customBtnUi.classList.remove('border-dashed', 'border-gray-200', 'text-gray-500');
+                    customBtnUi.classList.add('border-blue-500', 'bg-blue-50', 'text-blue-600', 'border-solid');
                 }
-            } catch(e) {}
+            } else {
+                const btn = document.querySelector(`[data-icon="${type}"]`);
+                if (btn) btn.classList.add('active');
+            }
+            
+            // หากมีลิงก์กรอกไว้แล้ว ให้สร้างอัปเดตทันทีเมื่อเปลี่ยนไอคอน
+            if (document.getElementById('qr-text').value.trim()) {
+                generateQRCode();
+            }
         }
 
         function testLink() {
-            try {
-                const url = document.getElementById('qr-text').value.trim();
-                if (url) {
-                    const finalUrl = /^https?:\/\//i.test(url) ? url : 'https://' + url;
-                    window.open(finalUrl, '_blank');
-                }
-            } catch(e) {}
+            const shortResult = document.getElementById('short-url-result').value.trim();
+            const shortContainer = document.getElementById('short-link-container');
+            let url = document.getElementById('qr-text').value.trim();
+            
+            if (shortContainer && !shortContainer.classList.contains('hidden') && shortResult) {
+                url = shortResult;
+            }
+            if (url) {
+                const finalUrl = /^https?:\/\//i.test(url) ? url : 'https://' + url;
+                window.open(finalUrl, '_blank');
+            }
         }
 
         function cleanDirtyUrl(rawUrl) {
-            let cleaned = rawUrl;
+            let cleaned = rawUrl.trim();
             try {
-                if (rawUrl.includes('google.com/url?q=')) {
-                    cleaned = new URL(rawUrl).searchParams.get('q') || rawUrl;
-                } else if (rawUrl.includes('l.line.me/')) {
-                    let match = rawUrl.match(/url=([^&]+)/);
+                if (cleaned.includes('google.com/url?q=')) {
+                    cleaned = new URL(cleaned).searchParams.get('q') || cleaned;
+                } else if (cleaned.includes('l.line.me/')) {
+                    let match = cleaned.match(/url=([^&]+)/);
                     if (match && match[1]) cleaned = decodeURIComponent(match[1]);
-                } else if (rawUrl.includes('l.facebook.com/l.php?u=')) {
-                    let match = rawUrl.match(/u=([^&]+)/);
+                } else if (cleaned.includes('l.facebook.com/l.php?u=')) {
+                    let match = cleaned.match(/u=([^&]+)/);
                     if (match && match[1]) cleaned = decodeURIComponent(match[1]);
                 }
             } catch (e) {}
@@ -332,278 +337,342 @@
             }
         }
 
-        // ระบบย่อลิงก์พร้อมตั้งชื่อเอง (รองรับทั้ง Google Apps Script และ GitHub Pages)
-        async function shortenLink() {
-            try {
-                const errEl = document.getElementById('alias-error');
-                if (errEl) errEl.classList.add('hidden');
+        function forceHttpsUrl(u) {
+            if (!u) return u;
+            return u.trim().replace(/^http:\/\//i, 'https://');
+        }
 
-                let rawUrl = document.getElementById('qr-text').value.trim();
-                let customAlias = document.getElementById('custom-alias').value.trim();
+        // ฟังก์ชันช่วยย่อลิงก์ฝั่งหน้าเว็บ (ใช้ได้ทั้งบน GitHub Pages และเป็นตัวสำรองให้ Apps Script)
+        async function shortenClientSide(url, customAlias) {
+            let shortUrl = null;
+            let errorReason = null;
+
+            // 1. ลองใช้ is.gd ผ่าน Proxy (AllOrigins / CorsProxy)
+            try {
+                let isGdApi = `https://is.gd/create.php?format=json&url=${encodeURIComponent(url)}`;
+                if (customAlias) isGdApi += `&shorturl=${encodeURIComponent(customAlias)}`;
                 
-                if (!rawUrl) {
-                    showMsg("⚠️ กรุณาใส่ลิงก์ต้นทางก่อนครับ");
+                const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(isGdApi);
+                const resIsGd = await fetch(proxyUrl);
+                if (resIsGd.ok) {
+                    const textData = await resIsGd.text();
+                    const dataIsGd = JSON.parse(textData);
+                    if (dataIsGd.shorturl) {
+                        shortUrl = forceHttpsUrl(dataIsGd.shorturl);
+                    } else if (dataIsGd.errormessage) {
+                        errorReason = "ชื่อลิงก์ '" + customAlias + "' มีคนใช้แล้ว หรือใช้ไม่ได้ กรุณาเปลี่ยนชื่อใหม่ครับ";
+                    }
+                }
+            } catch (e) {}
+
+            // 2. ลองใช้ spoo.me หากยังไม่ได้ลิงก์และไม่ติดปัญหาชื่อซ้ำ
+            if (!shortUrl && !errorReason) {
+                try {
+                    let bodyData = 'url=' + encodeURIComponent(url);
+                    if (customAlias) bodyData += '&alias=' + encodeURIComponent(customAlias);
+
+                    const resSpoo = await fetch('https://spoo.me/', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
+                        body: bodyData
+                    });
+                    const dataSpoo = await resSpoo.json();
+                    if (resSpoo.ok && dataSpoo.short_url) {
+                        shortUrl = forceHttpsUrl(dataSpoo.short_url);
+                    } else if (customAlias) {
+                        errorReason = "ชื่อลิงก์ '" + customAlias + "' มีคนใช้ไปแล้วครับ กรุณาตั้งชื่อใหม่";
+                    }
+                } catch (e) {}
+            }
+
+            // 3. หากไม่ได้ตั้งชื่อเอง ใช้ clck.ru เป็นตัวสำรอง
+            if (!shortUrl && !customAlias && !errorReason) {
+                try {
+                    const resClck = await fetch('https://clck.ru/--?url=' + encodeURIComponent(url));
+                    if (resClck.ok) {
+                        const textClck = await resClck.text();
+                        if (textClck && textClck.trim().startsWith('http')) {
+                            shortUrl = forceHttpsUrl(textClck.trim());
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            return { shortUrl, errorReason };
+        }
+
+        async function shortenLink() {
+            const errEl = document.getElementById('alias-error');
+            if (errEl) errEl.classList.add('hidden');
+
+            let rawUrl = document.getElementById('qr-text').value.trim();
+            let customAlias = document.getElementById('custom-alias').value.trim();
+            
+            if (!rawUrl) {
+                showMsg("⚠️ กรุณาวางลิงก์ต้นทางในช่องด้านบนก่อนครับ");
+                document.getElementById('qr-text').focus();
+                return;
+            }
+
+            if (customAlias) {
+                if (!/^[a-zA-Z0-9_-]+$/.test(customAlias)) {
+                    showMsg("⚠️ ชื่อลิงก์ใช้ได้เฉพาะภาษาอังกฤษ ตัวเลข ขีดกลาง(-) และขีดล่าง(_) เท่านั้นครับ");
                     return;
                 }
-
-                // ตรวจสอบเงื่อนไขการตั้งชื่อลิงก์
-                if (customAlias) {
-                    if (!/^[a-zA-Z0-9_-]+$/.test(customAlias)) {
-                        showMsg("⚠️ ชื่อลิงก์ใช้ได้เฉพาะภาษาอังกฤษ ตัวเลข ขีดกลาง(-) และขีดล่าง(_) เท่านั้นครับ");
-                        return;
-                    }
-                    if (customAlias.length < 5) {
-                        showMsg("⚠️ ชื่อลิงก์ต้องมีความยาวอย่างน้อย 5 ตัวอักษรครับ");
-                        return;
-                    }
+                if (customAlias.length < 5) {
+                    showMsg("⚠️ ชื่อลิงก์สั้นต้องมีความยาวอย่างน้อย 5 ตัวอักษรครับ");
+                    return;
                 }
+            }
 
-                let url = cleanDirtyUrl(rawUrl);
-                if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
-                document.getElementById('qr-text').value = url;
+            let url = cleanDirtyUrl(rawUrl);
+            if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+            document.getElementById('qr-text').value = url;
 
-                const btn = document.getElementById('shorten-btn');
-                const textSpan = document.getElementById('shorten-text');
-                btn.disabled = true;
-                textSpan.innerHTML = '<i class="fas fa-spinner loading-spin"></i>';
+            const btn = document.getElementById('shorten-btn');
+            const textSpan = document.getElementById('shorten-text');
+            btn.disabled = true;
+            textSpan.innerHTML = '<i class="fas fa-spinner loading-spin"></i> กำลังย่อ...';
 
-                // กรณีที่ 1: รันบน Google Apps Script
-                if (typeof google !== 'undefined' && google.script && google.script.run) {
-                    google.script.run
-                        .withSuccessHandler(function(res) {
+            // ตรวจสอบว่ารันบน Google Apps Script หรือไม่
+            if (typeof google !== 'undefined' && google.script && google.script.run) {
+                google.script.run
+                    .withSuccessHandler(async function(res) {
+                        // กรณีใช้ไฟล์ Code.gs เวอร์ชันเก่าที่ส่งค่ากลับมาเป็น String ตรงๆ
+                        if (typeof res === 'string' && res.startsWith('http')) {
                             btn.disabled = false;
                             textSpan.innerHTML = '<i class="fas fa-magic mr-1"></i> ย่อลิงก์';
-                            
-                            if (res && res.shortUrl) {
-                                document.getElementById('short-url-result').value = res.shortUrl;
-                                document.getElementById('short-link-container').classList.remove('hidden');
-                            } else if (res && res.error) {
-                                showMsg("⚠️ " + res.error);
-                            } else {
-                                showMsg("⚠️ ระบบย่อลิงก์ขัดข้อง ระบบจะสร้าง QR Code จากลิงก์เต็มแทนครับ");
-                            }
+                            document.getElementById('short-url-result').value = forceHttpsUrl(res);
+                            document.getElementById('short-link-container').classList.remove('hidden');
                             generateQRCode();
-                        })
-                        .withFailureHandler(function() {
-                            btn.disabled = false;
-                            textSpan.innerHTML = '<i class="fas fa-magic mr-1"></i> ย่อลิงก์';
-                            showMsg("⚠️ เกิดข้อผิดพลาดในการย่อลิงก์ ระบบจะใช้ลิงก์เต็มแทนครับ");
-                            generateQRCode();
-                        })
-                        .getShortUrl(url, customAlias);
-                } 
-                // กรณีที่ 2: รันบน GitHub Pages หรือเปิดไฟล์ HTML โดยตรง
-                else {
-                    let shortUrl = null;
-                    let errorReason = null;
-
-                    // 1. ลองใช้ is.gd ผ่าน Proxy (รองรับการตั้งชื่อลิงก์ดีที่สุด)
-                    try {
-                        let isGdApi = `https://is.gd/create.php?format=json&url=${encodeURIComponent(url)}`;
-                        if (customAlias) isGdApi += `&shorturl=${encodeURIComponent(customAlias)}`;
-                        
-                        const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(isGdApi);
-                        const resIsGd = await fetch(proxyUrl);
-                        if (resIsGd.ok) {
-                            const dataIsGd = await resIsGd.json();
-                            if (dataIsGd.shorturl) {
-                                shortUrl = dataIsGd.shorturl;
-                            } else if (dataIsGd.errormessage) {
-                                errorReason = "ชื่อลิงก์ '" + customAlias + "' มีคนใช้แล้ว หรือไม่สามารถใช้ได้ครับ กรุณาเปลี่ยนชื่อใหม่";
-                            }
+                            return;
                         }
-                    } catch (e) {}
+                        // กรณีใช้ไฟล์ Code.gs เวอร์ชันใหม่ที่ส่งค่ากลับมาเป็น Object
+                        if (res && res.shortUrl) {
+                            btn.disabled = false;
+                            textSpan.innerHTML = '<i class="fas fa-magic mr-1"></i> ย่อลิงก์';
+                            document.getElementById('short-url-result').value = forceHttpsUrl(res.shortUrl);
+                            document.getElementById('short-link-container').classList.remove('hidden');
+                            generateQRCode();
+                            return;
+                        }
+                        if (res && res.error && customAlias) {
+                            btn.disabled = false;
+                            textSpan.innerHTML = '<i class="fas fa-magic mr-1"></i> ย่อลิงก์';
+                            showMsg("⚠️ " + res.error);
+                            generateQRCode();
+                            return;
+                        }
 
-                    // 2. ลองใช้ spoo.me หากยังไม่ได้ลิงก์และไม่ได้ติดปัญหาชื่อซ้ำ
-                    if (!shortUrl && !errorReason) {
-                        try {
-                            let bodyData = 'url=' + encodeURIComponent(url);
-                            if (customAlias) bodyData += '&alias=' + encodeURIComponent(customAlias);
+                        // หากหลังบ้านย่อไม่สำเร็จ ให้สลับมาใช้ระบบหน้าเว็บช่วยย่อทันที
+                        const fallback = await shortenClientSide(url, customAlias);
+                        btn.disabled = false;
+                        textSpan.innerHTML = '<i class="fas fa-magic mr-1"></i> ย่อลิงก์';
+                        if (fallback.shortUrl) {
+                            document.getElementById('short-url-result').value = fallback.shortUrl;
+                            document.getElementById('short-link-container').classList.remove('hidden');
+                        } else if (fallback.errorReason) {
+                            showMsg("⚠️ " + fallback.errorReason);
+                        } else {
+                            showMsg("⚠️ ระบบย่อลิงก์ขัดข้องชั่วคราว ระบบได้สร้าง QR Code จากลิงก์เต็มให้แทนครับ");
+                        }
+                        generateQRCode();
+                    })
+                    .withFailureHandler(async function() {
+                        // กรณีเรียกหลังบ้านไม่ติด ให้ใช้หน้าเว็บย่อแทนทันที
+                        const fallback = await shortenClientSide(url, customAlias);
+                        btn.disabled = false;
+                        textSpan.innerHTML = '<i class="fas fa-magic mr-1"></i> ย่อลิงก์';
+                        if (fallback.shortUrl) {
+                            document.getElementById('short-url-result').value = fallback.shortUrl;
+                            document.getElementById('short-link-container').classList.remove('hidden');
+                        } else if (fallback.errorReason) {
+                            showMsg("⚠️ " + fallback.errorReason);
+                        } else {
+                            showMsg("⚠️ ระบบได้สร้าง QR Code จากลิงก์เต็มให้แทนครับ");
+                        }
+                        generateQRCode();
+                    })
+                    .getShortUrl(url, customAlias);
+            } else {
+                // รันบน GitHub Pages หรือเบราว์เซอร์ทั่วไป
+                const result = await shortenClientSide(url, customAlias);
+                btn.disabled = false;
+                textSpan.innerHTML = '<i class="fas fa-magic mr-1"></i> ย่อลิงก์';
 
-                            const resSpoo = await fetch('https://spoo.me/', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': 'application/json' },
-                                body: bodyData
-                            });
-                            const dataSpoo = await resSpoo.json();
-                            if (resSpoo.ok && dataSpoo.short_url) {
-                                shortUrl = dataSpoo.short_url;
-                            } else if (customAlias) {
-                                errorReason = "ชื่อลิงก์ '" + customAlias + "' มีคนใช้ไปแล้วครับ กรุณาตั้งชื่อใหม่";
-                            }
-                        } catch (e) {}
-                    }
-
-                    // 3. หากไม่ได้ตั้งชื่อเอง แล้วระบบข้างต้นล่ม ให้ใช้ clck.ru สำรอง
-                    if (!shortUrl && !customAlias && !errorReason) {
-                        try {
-                            const resClck = await fetch('https://clck.ru/--?url=' + encodeURIComponent(url));
-                            if (resClck.ok) {
-                                const textClck = await resClck.text();
-                                if (textClck && textClck.startsWith('http')) shortUrl = textClck.trim();
-                            }
-                        } catch (e) {}
-                    }
-
-                    btn.disabled = false;
-                    textSpan.innerHTML = '<i class="fas fa-magic mr-1"></i> ย่อลิงก์';
-
-                    if (shortUrl) {
-                        document.getElementById('short-url-result').value = shortUrl;
-                        document.getElementById('short-link-container').classList.remove('hidden');
-                    } else if (errorReason) {
-                        showMsg("⚠️ " + errorReason);
-                    } else {
-                        showMsg("⚠️ ระบบย่อลิงก์ขัดข้องชั่วคราว ระบบจะสร้าง QR Code จากลิงก์เต็มแทนครับ");
-                    }
-                    generateQRCode();
+                if (result.shortUrl) {
+                    document.getElementById('short-url-result').value = result.shortUrl;
+                    document.getElementById('short-link-container').classList.remove('hidden');
+                } else if (result.errorReason) {
+                    showMsg("⚠️ " + result.errorReason);
+                } else {
+                    showMsg("⚠️ ระบบย่อลิงก์ขัดข้องชั่วคราว ระบบได้สร้าง QR Code จากลิงก์เต็มให้แทนครับ");
                 }
-
-            } catch(globalErr) {
-                const btn = document.getElementById('shorten-btn');
-                const textSpan = document.getElementById('shorten-text');
-                if(btn) btn.disabled = false;
-                if(textSpan) textSpan.innerHTML = '<i class="fas fa-magic mr-1"></i> ย่อลิงก์';
                 generateQRCode();
             }
         }
 
         function copyLink() {
-            try {
-                const input = document.getElementById('short-url-result');
-                input.select();
-                document.execCommand('copy');
-                const icon = document.getElementById('copy-icon');
-                icon.className = "fas fa-check text-emerald-500";
+            const input = document.getElementById('short-url-result');
+            if (!input || !input.value) return;
+            input.select();
+            document.execCommand('copy');
+            const icon = document.getElementById('copy-icon');
+            if (icon) {
+                icon.className = "fas fa-check text-white";
                 setTimeout(() => { icon.className = "fas fa-copy"; }, 2000);
-            } catch(e) {}
+            }
         }
 
         function generateQRCode() {
+            const errEl = document.getElementById('alias-error');
+            if (errEl) errEl.classList.add('hidden');
+
+            let text = document.getElementById('qr-text').value.trim();
+            const shortResult = document.getElementById('short-url-result').value.trim();
+            const shortContainer = document.getElementById('short-link-container');
+            
+            if (shortContainer && !shortContainer.classList.contains('hidden') && shortResult) {
+                text = shortResult;
+            }
+
+            if (!text) {
+                showMsg("⚠️ กรุณาวางลิงก์ต้นทางในช่องด้านบนก่อนกดสร้าง QR Code ครับ");
+                document.getElementById('qr-text').focus();
+                return;
+            }
+
+            if (typeof QRCode === 'undefined') {
+                showMsg("⚠️ ไลบรารี QR Code กำลังโหลด กรุณารอสักครู่แล้วกดอีกครั้งครับ");
+                return;
+            }
+
+            const size = parseInt(document.getElementById('qr-size').value) || 512;
+            const ecc = document.getElementById('qr-ecc').value || 'H';
+            const qrColor = document.getElementById('qr-color').value || '#000000';
+            const bgColor = document.getElementById('bg-color').value || '#ffffff';
+            const container = document.getElementById('qr-raw-container');
+
+            container.innerHTML = "";
             try {
-                let text = document.getElementById('qr-text').value.trim();
-                const shortResult = document.getElementById('short-url-result').value.trim();
-                const shortContainer = document.getElementById('short-link-container');
-                
-                if (shortContainer && !shortContainer.classList.contains('hidden') && shortResult) {
-                    text = shortResult;
-                }
-
-                if (!text) return alert("กรุณากรอกลิงก์ก่อนครับ");
-
-                const size = parseInt(document.getElementById('qr-size').value);
-                const ecc = document.getElementById('qr-ecc').value;
-                const qrColor = document.getElementById('qr-color').value;
-                const bgColor = document.getElementById('bg-color').value;
-                const container = document.getElementById('qr-raw-container');
-
-                container.innerHTML = "";
+                new QRCode(container, {
+                    text: text, width: 1024, height: 1024,
+                    colorDark: qrColor, colorLight: bgColor,
+                    correctLevel: QRCode.CorrectLevel[ecc]
+                });
+            } catch (err) {
                 try {
+                    container.innerHTML = "";
                     new QRCode(container, {
                         text: text, width: 1024, height: 1024,
                         colorDark: qrColor, colorLight: bgColor,
-                        correctLevel: QRCode.CorrectLevel[ecc]
+                        correctLevel: QRCode.CorrectLevel.L
                     });
-                } catch (err) {
-                    try {
-                        container.innerHTML = "";
-                        new QRCode(container, {
-                            text: text, width: 1024, height: 1024,
-                            colorDark: qrColor, colorLight: bgColor,
-                            correctLevel: QRCode.CorrectLevel.L
-                        });
-                    } catch (f) {
-                        alert("ความยาวข้อมูลมากเกินกว่าจะสร้าง QR Code ได้ครับ");
-                        return;
-                    }
+                } catch (f) {
+                    showMsg("⚠️ ลิงก์มีความยาวมากเกินไป แนะนำให้กดปุ่ม 'ย่อลิงก์' ก่อนสร้างครับ");
+                    return;
+                }
+            }
+
+            // วนตรวจสอบจนกว่าภาพ QR ต้นฉบับจะถูกสร้างเสร็จ แล้ววาดขึ้นหน้าจอทันที
+            let attempts = 0;
+            const checkInterval = setInterval(async () => {
+                attempts++;
+                const rawCanvas = container.querySelector('canvas');
+                const rawImg = container.querySelector('img');
+                
+                let sourceEl = null;
+                if (rawCanvas && rawCanvas.width > 0) {
+                    sourceEl = rawCanvas;
+                } else if (rawImg && rawImg.complete && rawImg.naturalWidth > 0) {
+                    sourceEl = rawImg;
                 }
 
-                setTimeout(async () => {
-                    const rawCanvas = container.querySelector('canvas');
-                    if (rawCanvas) {
-                        await renderFinal(rawCanvas, size);
+                if (sourceEl || attempts > 25) {
+                    clearInterval(checkInterval);
+                    if (sourceEl) {
+                        await renderFinal(sourceEl, size);
                         document.getElementById('placeholder-ui').classList.add('hidden');
                         document.getElementById('display-canvas').classList.remove('hidden');
                         document.getElementById('action-area').classList.remove('hidden');
                     }
-                }, 600);
-            } catch(e) {}
+                }
+            }, 80);
         }
 
         async function renderFinal(source, outputSize) {
-            try {
-                const canvas = document.getElementById('display-canvas');
-                const ctx = canvas.getContext('2d');
-                const bgColor = document.getElementById('bg-color').value;
-                const qrColor = document.getElementById('qr-color').value;
-                const textTitle = document.getElementById('qr-title').value.trim();
-                
-                try { await document.fonts.load('600 16px "K2D"'); } catch(e) {}
-                try { await document.fonts.ready; } catch(e) {}
-                
-                const textPadding = textTitle ? (outputSize * 0.18) : 0;
-                canvas.width = outputSize;
-                canvas.height = outputSize + textPadding;
+            const canvas = document.getElementById('display-canvas');
+            const ctx = canvas.getContext('2d');
+            const bgColor = document.getElementById('bg-color').value || '#ffffff';
+            const qrColor = document.getElementById('qr-color').value || '#000000';
+            const textTitle = document.getElementById('qr-title').value.trim();
+            
+            const textPadding = textTitle ? Math.round(outputSize * 0.18) : 0;
+            canvas.width = outputSize;
+            canvas.height = outputSize + textPadding;
 
-                ctx.fillStyle = bgColor;
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                ctx.imageSmoothingEnabled = true;
-                ctx.imageSmoothingQuality = 'high';
-                ctx.drawImage(source, 0, 0, outputSize, outputSize);
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(source, 0, 0, outputSize, outputSize);
 
-                let logoSrc = (selectedIconType === 'custom') ? customIconBase64 : officialLogos[selectedIconType];
-                if (logoSrc && selectedIconType !== 'none') {
+            let logoSrc = (selectedIconType === 'custom') ? customIconBase64 : officialLogos[selectedIconType];
+            if (logoSrc && selectedIconType !== 'none') {
+                await new Promise((resolve) => {
                     const img = new Image();
-                    try {
-                        img.src = logoSrc;
-                        await new Promise((resolve, reject) => {
-                            img.onload = resolve;
-                            img.onerror = reject;
-                        });
-                        
-                        const logoSizeValue = outputSize * 0.22;
-                        const x = (outputSize - logoSizeValue) / 2;
-                        const y = (outputSize - logoSizeValue) / 2;
-                        const pad = outputSize * 0.04;
-                        const r = outputSize * 0.06;
-                        
-                        ctx.fillStyle = bgColor; 
-                        ctx.beginPath();
-                        if (ctx.roundRect) ctx.roundRect(x - pad, y - pad, logoSizeValue + pad * 2, logoSizeValue + pad * 2, r);
-                        else ctx.rect(x - pad, y - pad, logoSizeValue + pad * 2, logoSizeValue + pad * 2);
-                        ctx.fill();
-                        
-                        ctx.drawImage(img, x, y, logoSizeValue, logoSizeValue);
-                    } catch (e) {}
-                }
+                    const timer = setTimeout(resolve, 1500); // ป้องกันการค้างหากโหลดรูปไม่สำเร็จ
+                    img.onload = () => {
+                        clearTimeout(timer);
+                        try {
+                            const logoSizeValue = outputSize * 0.22;
+                            const x = (outputSize - logoSizeValue) / 2;
+                            const y = (outputSize - logoSizeValue) / 2;
+                            const pad = outputSize * 0.035;
+                            const r = outputSize * 0.05;
+                            
+                            ctx.fillStyle = bgColor; 
+                            ctx.beginPath();
+                            if (ctx.roundRect) ctx.roundRect(x - pad, y - pad, logoSizeValue + pad * 2, logoSizeValue + pad * 2, r);
+                            else ctx.rect(x - pad, y - pad, logoSizeValue + pad * 2, logoSizeValue + pad * 2);
+                            ctx.fill();
+                            
+                            ctx.drawImage(img, x, y, logoSizeValue, logoSizeValue);
+                        } catch(e) {}
+                        resolve();
+                    };
+                    img.onerror = () => {
+                        clearTimeout(timer);
+                        resolve();
+                    };
+                    img.src = logoSrc;
+                });
+            }
 
-                if (textTitle) {
-                    ctx.fillStyle = qrColor;
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    let fontSize = outputSize * 0.07;
-                    ctx.font = `600 ${fontSize}px "K2D"`;
-                    
-                    const maxWidth = outputSize * 0.92;
-                    let textWidth = ctx.measureText(textTitle).width;
-                    if (textWidth > maxWidth) {
-                        fontSize = fontSize * (maxWidth / textWidth);
-                        ctx.font = `600 ${fontSize}px "K2D"`;
-                    }
-                    ctx.fillText(textTitle, outputSize / 2, outputSize + (textPadding / 2));
+            if (textTitle) {
+                ctx.fillStyle = qrColor;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                let fontSize = Math.round(outputSize * 0.07);
+                ctx.font = `600 ${fontSize}px "K2D", sans-serif`;
+                
+                const maxWidth = outputSize * 0.92;
+                let textWidth = ctx.measureText(textTitle).width;
+                if (textWidth > maxWidth) {
+                    fontSize = Math.floor(fontSize * (maxWidth / textWidth));
+                    ctx.font = `600 ${fontSize}px "K2D", sans-serif`;
                 }
-            } catch(err) {}
+                ctx.fillText(textTitle, outputSize / 2, outputSize + (textPadding / 2));
+            }
         }
 
         function downloadQR() {
-            try {
-                const canvas = document.getElementById('display-canvas');
-                const link = document.createElement('a');
-                link.download = `QR_KruKan_${Date.now()}.png`;
-                link.href = canvas.toDataURL("image/png");
-                link.click();
-            } catch(e) {}
+            const canvas = document.getElementById('display-canvas');
+            const link = document.createElement('a');
+            link.download = `QR_KruKan_${Date.now()}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
         }
 
         if (!CanvasRenderingContext2D.prototype.roundRect) {
